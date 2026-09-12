@@ -199,7 +199,9 @@ export const authApi = {
       preferences: { theme: 'fantasy-dark', soundEnabled: true, reducedMotion: false, notifications: true },
     };
     dbStore.user = user;
-    dbStore.character.name = trimmedName;
+    if (dbStore.character) {
+      dbStore.character.name = trimmedName;
+    }
     try { localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(user)); } catch {}
     return user;
   },
@@ -222,7 +224,9 @@ export const authApi = {
       };
 
       dbStore.user = googleUser;
-      dbStore.character.name = googleUser.name;
+      if (dbStore.character) {
+        dbStore.character.name = googleUser.name;
+      }
       try { localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(googleUser)); } catch {}
       return googleUser;
     } catch (err: any) {

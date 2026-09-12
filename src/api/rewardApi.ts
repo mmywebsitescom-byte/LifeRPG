@@ -25,23 +25,27 @@ export const rewardApi = {
       });
       const item = dbStore.rewards.find((r) => r.id === rewardId);
       if (item) item.owned = true;
-      dbStore.character.gold = result.remainingGold;
+      if (dbStore.character) {
+        dbStore.character.gold = result.remainingGold;
+      }
       return result;
     } catch {
       await dbStore.delay(200);
       const item = dbStore.rewards.find((r) => r.id === rewardId);
       if (!item) throw new Error('Item not found in rewards inventory.');
       if (item.owned) throw new Error('You already own this item.');
-      if (dbStore.character.gold < item.price) {
-        throw new Error(`Insufficient gold! You need ${item.price} gold, but only have ${dbStore.character.gold}. Complete more quests!`);
+      const currentGold = dbStore.character?.gold ?? 0;
+      if (currentGold < item.price) {
+        throw new Error(`Insufficient gold! You need ${item.price} gold, but only have ${currentGold}. Complete more quests!`);
       }
 
-      dbStore.character.gold -= item.price;
+      if (dbStore.character) {
+        dbStore.character.gold -= item.price;
+        if (item.statBonus && dbStore.character.attributes) {
+          dbStore.character.attributes[item.statBonus.attribute] = (dbStore.character.attributes[item.statBonus.attribute] || 0) + item.statBonus.amount;
+        }
+      }
       item.owned = true;
-
-      if (item.statBonus) {
-        dbStore.character.attributes[item.statBonus.attribute] += item.statBonus.amount;
-      }
 
       dbStore.history.unshift({
         id: `his_${Date.now()}`,
@@ -55,7 +59,7 @@ export const rewardApi = {
 
       return {
         reward: { ...item },
-        remainingGold: dbStore.character.gold,
+        remainingGold: dbStore.character?.gold ?? 0,
       };
     }
   },
@@ -75,18 +79,20 @@ export const rewardApi = {
 
       item.equipped = !item.equipped;
 
-      if (item.category === 'Gear') {
-        if (item.name.toLowerCase().includes('sword') || item.name.toLowerCase().includes('blade')) {
-          dbStore.character.equipment.weapon = item.equipped ? item.name : undefined;
-        } else if (item.name.toLowerCase().includes('cloak') || item.name.toLowerCase().includes('armor')) {
-          dbStore.character.equipment.armor = item.equipped ? item.name : undefined;
-        } else if (item.name.toLowerCase().includes('boots')) {
-          dbStore.character.equipment.boots = item.equipped ? item.name : undefined;
-        } else if (item.name.toLowerCase().includes('ring')) {
-          dbStore.character.equipment.ring = item.equipped ? item.name : undefined;
+      if (dbStore.character && dbStore.character.equipment) {
+        if (item.category === 'Gear') {
+          if (item.name.toLowerCase().includes('sword') || item.name.toLowerCase().includes('blade')) {
+            dbStore.character.equipment.weapon = item.equipped ? item.name : undefined;
+          } else if (item.name.toLowerCase().includes('cloak') || item.name.toLowerCase().includes('armor')) {
+            dbStore.character.equipment.armor = item.equipped ? item.name : undefined;
+          } else if (item.name.toLowerCase().includes('boots')) {
+            dbStore.character.equipment.boots = item.equipped ? item.name : undefined;
+          } else if (item.name.toLowerCase().includes('ring')) {
+            dbStore.character.equipment.ring = item.equipped ? item.name : undefined;
+          }
+        } else if (item.category === 'Pets') {
+          dbStore.character.equipment.pet = item.equipped ? item.name : undefined;
         }
-      } else if (item.category === 'Pets') {
-        dbStore.character.equipment.pet = item.equipped ? item.name : undefined;
       }
 
       return { ...item };

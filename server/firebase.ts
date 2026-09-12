@@ -39,10 +39,16 @@ function getServiceAccountCredential(): ServiceAccount | null {
 
   // 3. Check discrete environment variables (Vercel standard)
   if (process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
+    let rawKey = process.env.FIREBASE_PRIVATE_KEY.trim();
+    if ((rawKey.startsWith('"') && rawKey.endsWith('"')) || (rawKey.startsWith("'") && rawKey.endsWith("'"))) {
+      rawKey = rawKey.slice(1, -1);
+    }
+    const privateKey = rawKey.replace(/\\n/g, '\n');
+
     return {
       projectId: process.env.FIREBASE_PROJECT_ID || 'teachersday-1e00c',
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL.trim(),
+      privateKey,
     };
   }
 
