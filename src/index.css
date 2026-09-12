@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --font-rpg: 'Cinzel', serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --palette-parchment: #F5F5F0;
+    --palette-sand: #E6D8C3;
+    --palette-tan: #C2A68C;
+    --palette-sage: #5D866C;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #F5F5F0;
+    color: #1C1917;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  html.dark body {
+    background-color: #0A0A0A;
+    color: #FAFAFA;
+  }
+
+  h1, h2, h3, .font-rpg {
+    font-family: var(--font-rpg);
+    letter-spacing: 0.02em;
+  }
+}
+
+/* Custom RPG glows and cards matching ColorHunt palette #f5f5f0, #e6d8c3, #c2a68c, #5d866c */
+.sage-glow {
+  box-shadow: 0 0 25px -4px rgba(93, 134, 108, 0.4);
+}
+
+html.dark .sage-glow {
+  box-shadow: 0 0 25px -4px rgba(248, 113, 113, 0.5);
+}
+
+.gold-glow {
+  box-shadow: 0 0 25px -5px rgba(230, 216, 195, 0.85);
+}
+
+html.dark .gold-glow {
+  box-shadow: 0 0 25px -5px rgba(248, 113, 113, 0.4);
+}
+
+.rpg-border {
+  border: 1px solid #C2A68C;
+  background-color: #E6D8C3;
+}
+
+html.dark .rpg-border {
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  background-color: #181214;
+}
+
+.rpg-card {
+  background-color: #FFFFFF;
+  border: 1px solid #C2A68C;
+  box-shadow: 0 1px 4px rgba(28, 25, 23, 0.04);
+}
+
+.rpg-card:hover {
+  border-color: #5D866C;
+  box-shadow: 0 4px 16px -4px rgba(93, 134, 108, 0.15);
+}
+
+html.dark .rpg-card {
+  background-color: #141414;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  color: #FAFAFA;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
+html.dark .rpg-card:hover {
+  border-color: #F87171;
+  box-shadow: 0 0 22px -3px rgba(248, 113, 113, 0.35);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F5F5F0;
+}
+html.dark ::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C2A68C;
+  border-radius: 9999px;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #3F1D21;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5D866C;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #F87171;
+}

@@ -1,0 +1,540 @@
+{
+  "user": {
+    "id": "usr_1789208552218",
+    "name": "my_wabe",
+    "email": "mmywebsitescom@gmail.com",
+    "avatar": "",
+    "createdAt": "2026-09-12T10:22:32.218Z",
+    "preferences": {
+      "theme": "fantasy-dark",
+      "soundEnabled": true,
+      "reducedMotion": false,
+      "notifications": true
+    }
+  },
+  "character": {
+    "id": "char_001",
+    "userId": "usr_001",
+    "name": "my_wabe",
+    "heroClass": "Scholar",
+    "title": "Grand Arcane Polymath",
+    "avatarUrl": "",
+    "level": 12,
+    "xp": 2530,
+    "gold": 1265,
+    "streak": 14,
+    "longestStreak": 31,
+    "streakProtectionActive": true,
+    "streakHistory": [
+      {
+        "day": "M",
+        "date": "2026-09-05",
+        "completed": true
+      },
+      {
+        "day": "T",
+        "date": "2026-09-06",
+        "completed": true
+      },
+      {
+        "day": "W",
+        "date": "2026-09-07",
+        "completed": true
+      },
+      {
+        "day": "T",
+        "date": "2026-09-08",
+        "completed": true
+      },
+      {
+        "day": "F",
+        "date": "2026-09-09",
+        "completed": true
+      },
+      {
+        "day": "S",
+        "date": "2026-09-10",
+        "completed": true
+      },
+      {
+        "day": "S",
+        "date": "2026-09-11",
+        "completed": true
+      }
+    ],
+    "attributes": {
+      "strength": 42,
+      "intelligence": 75,
+      "wisdom": 31,
+      "discipline": 54,
+      "endurance": 45,
+      "creativity": 28
+    },
+    "equipment": {
+      "weapon": "Shadow Blade of Focus",
+      "armor": "Rune-Woven Scholar Cloak",
+      "boots": "Boots of Prompt Execution",
+      "ring": "Ring of Deep Contemplation",
+      "pet": "Cyber Gryphon Companion"
+    },
+    "recentGains": {
+      "intelligence": 20,
+      "discipline": 8,
+      "strength": 5,
+      "creativity": 4
+    }
+  },
+  "quests": [
+    {
+      "userId": "usr_001",
+      "title": "Firebase Cloud Firestore Quest",
+      "description": "Verify live synchronization with project teachersday-1e00c",
+      "category": "Coding",
+      "difficulty": "Epic",
+      "estimatedTime": "1h",
+      "xpReward": 150,
+      "goldReward": 50,
+      "attribute": "intelligence",
+      "attributeReward": 15,
+      "dueDate": "2026-09-12",
+      "repeat": "None",
+      "id": "qst_1789208439938_822",
+      "status": "Active",
+      "createdAt": "2026-09-12T10:20:39.938Z"
+    },
+    {
+      "id": "qst_101",
+      "userId": "usr_001",
+      "title": "Study DBMS & Indexing for 2 hours",
+      "description": "Master index optimization, B-trees, and transaction isolation levels for systems architecture review.",
+      "category": "Knowledge",
+      "difficulty": "Hard",
+      "estimatedTime": "2h",
+      "xpReward": 80,
+      "goldReward": 25,
+      "attribute": "intelligence",
+      "attributeReward": 8,
+      "dueDate": "2026-09-12",
+      "dueTime": "17:25",
+      "status": "Completed",
+      "repeat": "Daily",
+      "createdAt": "2026-09-12T08:55:06.562Z",
+      "completedAt": "2026-09-12T09:57:16.874Z"
+    },
+    {
+      "id": "qst_102",
+      "userId": "usr_001",
+      "title": "Hit 10,000 Steps & Light Cardio",
+      "description": "Brisk evening walk or jog to clear mental cache and raise VO2 max.",
+      "category": "Fitness",
+      "difficulty": "Medium",
+      "estimatedTime": "50m",
+      "xpReward": 55,
+      "goldReward": 20,
+      "attribute": "strength",
+      "attributeReward": 6,
+      "dueDate": "2026-09-12",
+      "dueTime": "19:55",
+      "status": "Active",
+      "repeat": "Daily",
+      "createdAt": "2026-09-12T07:55:06.563Z"
+    },
+    {
+      "id": "qst_103",
+      "userId": "usr_001",
+      "title": "Build Full-Stack Express API Endpoint",
+      "description": "Implement persistent REST routes with thorough validation, clean async handlers, and error catching.",
+      "category": "Coding",
+      "difficulty": "Epic",
+      "estimatedTime": "1h 30m",
+      "xpReward": 120,
+      "goldReward": 45,
+      "attribute": "intelligence",
+      "attributeReward": 12,
+      "dueDate": "2026-09-12",
+      "dueTime": "18:40",
+      "status": "Active",
+      "repeat": "None",
+      "createdAt": "2026-09-12T09:25:06.563Z"
+    },
+    {
+      "id": "qst_104",
+      "userId": "usr_001",
+      "title": "15 Minutes Mindful Breathwork",
+      "description": "Box breathing ritual to reset nervous system and heighten deep focus.",
+      "category": "Health",
+      "difficulty": "Easy",
+      "estimatedTime": "15m",
+      "xpReward": 30,
+      "goldReward": 10,
+      "attribute": "discipline",
+      "attributeReward": 3,
+      "dueDate": "2026-09-12",
+      "dueTime": "21:25",
+      "status": "Active",
+      "repeat": "Daily",
+      "createdAt": "2026-09-12T08:25:06.563Z"
+    },
+    {
+      "id": "qst_105",
+      "userId": "usr_001",
+      "title": "Read 25 Pages of Deep Work",
+      "description": "Absorb principles of undistracted concentration in an age of shallow digital noise.",
+      "category": "Knowledge",
+      "difficulty": "Medium",
+      "estimatedTime": "40m",
+      "xpReward": 45,
+      "goldReward": 15,
+      "attribute": "wisdom",
+      "attributeReward": 5,
+      "dueDate": "2026-09-12",
+      "dueTime": "20:25",
+      "status": "Active",
+      "repeat": "Daily",
+      "createdAt": "2026-09-12T06:55:06.563Z"
+    },
+    {
+      "id": "qst_106",
+      "userId": "usr_001",
+      "title": "Hydration Challenge: 3L Water",
+      "description": "Track hydration intervals throughout the work day.",
+      "category": "Health",
+      "difficulty": "Easy",
+      "estimatedTime": "All day",
+      "xpReward": 25,
+      "goldReward": 10,
+      "attribute": "endurance",
+      "attributeReward": 3,
+      "dueDate": "2026-09-12",
+      "status": "Completed",
+      "repeat": "Daily",
+      "createdAt": "2026-09-11T09:55:06.563Z",
+      "completedAt": "2026-09-11T21:55:06.563Z"
+    }
+  ],
+  "achievements": [
+    {
+      "id": "ach_001",
+      "name": "FIRST QUEST",
+      "description": "Complete your first quest in the real world.",
+      "iconName": "Award",
+      "category": "Quests",
+      "requirement": "Complete 1 quest",
+      "progress": 1,
+      "maxProgress": 1,
+      "unlocked": true,
+      "unlockedAt": "2026-08-01T10:00:00.000Z",
+      "rewardXp": 50,
+      "rewardGold": 20
+    },
+    {
+      "id": "ach_002",
+      "name": "DISCIPLINE INCARNATE",
+      "description": "Maintain a daily quest streak of 7 consecutive days.",
+      "iconName": "Flame",
+      "category": "Streak",
+      "requirement": "Reach 7-day streak",
+      "progress": 14,
+      "maxProgress": 7,
+      "unlocked": true,
+      "unlockedAt": "2026-08-07T12:00:00.000Z",
+      "rewardXp": 150,
+      "rewardGold": 75
+    },
+    {
+      "id": "ach_003",
+      "name": "MIND PALACE",
+      "description": "Attain 50 points in Intelligence through study and coding.",
+      "iconName": "Sparkles",
+      "category": "Attributes",
+      "requirement": "Intelligence >= 50",
+      "progress": 75,
+      "maxProgress": 50,
+      "unlocked": true,
+      "unlockedAt": "2026-08-15T18:30:00.000Z",
+      "rewardXp": 200,
+      "rewardGold": 100
+    },
+    {
+      "id": "ach_004",
+      "name": "QUEST MASTER",
+      "description": "Complete 50 unique quests across all categories.",
+      "iconName": "Scroll",
+      "category": "Quests",
+      "requirement": "Complete 50 quests",
+      "progress": 68,
+      "maxProgress": 50,
+      "unlocked": true,
+      "unlockedAt": "2026-08-25T14:15:00.000Z",
+      "rewardXp": 300,
+      "rewardGold": 150
+    },
+    {
+      "id": "ach_005",
+      "name": "DOUBLE DIGITS",
+      "description": "Reach Hero Level 10.",
+      "iconName": "Trophy",
+      "category": "Level",
+      "requirement": "Level 10",
+      "progress": 12,
+      "maxProgress": 10,
+      "unlocked": true,
+      "unlockedAt": "2026-09-01T09:00:00.000Z",
+      "rewardXp": 250,
+      "rewardGold": 120
+    },
+    {
+      "id": "ach_006",
+      "name": "MONTH OF WILL",
+      "description": "Maintain a 30-day streak without failing.",
+      "iconName": "Zap",
+      "category": "Streak",
+      "requirement": "30-day streak",
+      "progress": 14,
+      "maxProgress": 30,
+      "unlocked": false,
+      "rewardXp": 500,
+      "rewardGold": 250
+    },
+    {
+      "id": "ach_007",
+      "name": "IRON BODY",
+      "description": "Accumulate 50 Endurance from physical disciplines.",
+      "iconName": "Shield",
+      "category": "Attributes",
+      "requirement": "Endurance >= 50",
+      "progress": 45,
+      "maxProgress": 50,
+      "unlocked": false,
+      "rewardXp": 200,
+      "rewardGold": 100
+    }
+  ],
+  "rewards": [
+    {
+      "id": "rew_001",
+      "name": "Shadow Blade of Focus",
+      "description": "A dark tempered blade that slices through procrastination. +5 Strength bonus.",
+      "price": 500,
+      "category": "Gear",
+      "icon": "Sword",
+      "rarity": "Epic",
+      "owned": true,
+      "equipped": true,
+      "statBonus": {
+        "attribute": "strength",
+        "amount": 5
+      }
+    },
+    {
+      "id": "rew_002",
+      "name": "Cyber Theme HUD",
+      "description": "Transforms UI panels with futuristic neon accents and glowing HUD rings.",
+      "price": 300,
+      "category": "Themes",
+      "icon": "Palette",
+      "rarity": "Rare",
+      "owned": false
+    },
+    {
+      "id": "rew_003",
+      "name": "Dragon Crest of Valor",
+      "description": "Exclusive title crest displayed on profile sheet and hero banners.",
+      "price": 750,
+      "category": "Badges",
+      "icon": "ShieldCheck",
+      "rarity": "Legendary",
+      "owned": false
+    },
+    {
+      "id": "rew_004",
+      "name": "Cyber Gryphon Companion",
+      "description": "An ethereal familiar that hovers alongside your avatar and cheers completions.",
+      "price": 1000,
+      "category": "Pets",
+      "icon": "Sparkles",
+      "rarity": "Legendary",
+      "owned": true,
+      "equipped": true
+    },
+    {
+      "id": "rew_005",
+      "name": "Boots of Prompt Execution",
+      "description": "Reduces perceived friction when starting tough tasks. +4 Discipline bonus.",
+      "price": 450,
+      "category": "Gear",
+      "icon": "Zap",
+      "rarity": "Rare",
+      "owned": true,
+      "equipped": true,
+      "statBonus": {
+        "attribute": "discipline",
+        "amount": 4
+      }
+    },
+    {
+      "id": "rew_006",
+      "name": "Solar Flare Theme",
+      "description": "Warm gold and solar embers wash across your command decks.",
+      "price": 350,
+      "category": "Themes",
+      "icon": "Sun",
+      "rarity": "Rare",
+      "owned": false
+    },
+    {
+      "id": "rew_007",
+      "name": "Ring of Deep Contemplation",
+      "description": "Channels mental flow during intense study blocks. +6 Intelligence.",
+      "price": 600,
+      "category": "Gear",
+      "icon": "Compass",
+      "rarity": "Epic",
+      "owned": true,
+      "equipped": true,
+      "statBonus": {
+        "attribute": "intelligence",
+        "amount": 6
+      }
+    },
+    {
+      "id": "rew_008",
+      "name": "Rune-Woven Scholar Cloak",
+      "description": "Silken robe with enchanted ink threads. +8 Wisdom aesthetic.",
+      "price": 850,
+      "category": "Gear",
+      "icon": "Shield",
+      "rarity": "Epic",
+      "owned": true,
+      "equipped": true
+    }
+  ],
+  "history": [
+    {
+      "id": "his_1789207036874",
+      "questId": "qst_101",
+      "title": "Study DBMS & Indexing for 2 hours",
+      "category": "Knowledge",
+      "xpGained": 80,
+      "goldGained": 25,
+      "attributeGained": {
+        "attribute": "intelligence",
+        "amount": 8
+      },
+      "timestamp": "Just now",
+      "type": "quest_complete"
+    },
+    {
+      "id": "his_001",
+      "questId": "qst_106",
+      "title": "Hydration Challenge: 3L Water",
+      "category": "Health",
+      "xpGained": 25,
+      "goldGained": 10,
+      "attributeGained": {
+        "attribute": "endurance",
+        "amount": 3
+      },
+      "timestamp": "Today, 02:15 PM",
+      "type": "quest_complete"
+    },
+    {
+      "id": "his_002",
+      "title": "Study DBMS & Indexing for 2 hours",
+      "category": "Knowledge",
+      "xpGained": 80,
+      "goldGained": 25,
+      "attributeGained": {
+        "attribute": "intelligence",
+        "amount": 8
+      },
+      "timestamp": "Yesterday, 04:30 PM",
+      "type": "quest_complete"
+    },
+    {
+      "id": "his_003",
+      "title": "Morning 5K Trail Run",
+      "category": "Fitness",
+      "xpGained": 60,
+      "goldGained": 25,
+      "attributeGained": {
+        "attribute": "endurance",
+        "amount": 6
+      },
+      "timestamp": "Sep 10, 07:00 AM",
+      "type": "quest_complete"
+    }
+  ],
+  "progress": {
+    "currentLevel": 12,
+    "totalXp": 2530,
+    "totalQuestsCompleted": 68,
+    "currentStreak": 14,
+    "longestStreak": 31,
+    "totalGoldEarned": 3505,
+    "chartData": [
+      {
+        "date": "Sep 06",
+        "xp": 220,
+        "quests": 5
+      },
+      {
+        "date": "Sep 07",
+        "xp": 140,
+        "quests": 3
+      },
+      {
+        "date": "Sep 08",
+        "xp": 260,
+        "quests": 6
+      },
+      {
+        "date": "Sep 09",
+        "xp": 310,
+        "quests": 7
+      },
+      {
+        "date": "Sep 10",
+        "xp": 195,
+        "quests": 4
+      },
+      {
+        "date": "Sep 11",
+        "xp": 245,
+        "quests": 5
+      },
+      {
+        "date": "Sep 12",
+        "xp": 180,
+        "quests": 4
+      }
+    ],
+    "timeline": [
+      {
+        "level": 1,
+        "unlockedTitle": "Apprentice Seeker",
+        "date": "Aug 01, 2026"
+      },
+      {
+        "level": 3,
+        "unlockedTitle": "Disciplined Journeyman",
+        "date": "Aug 08, 2026"
+      },
+      {
+        "level": 6,
+        "unlockedTitle": "Focus Adept",
+        "date": "Aug 18, 2026"
+      },
+      {
+        "level": 9,
+        "unlockedTitle": "Master of Will",
+        "date": "Aug 28, 2026"
+      },
+      {
+        "level": 12,
+        "unlockedTitle": "Grand Arcane Polymath",
+        "date": "Sep 07, 2026"
+      }
+    ]
+  }
+}

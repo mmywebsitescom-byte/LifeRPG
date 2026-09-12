@@ -1,0 +1,23 @@
+.shuffle-parent {
+  display: inline-block;
+  vertical-align: baseline;
+  position: relative;
+}
+
+.shuffle-parent.is-ready {
+  opacity: 1;
+}
+
+.shuffle-char {
+  display: inline-block;
+  position: relative;
+}
+
+.shuffle-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.shuffle-line {
+  display: block;
+}

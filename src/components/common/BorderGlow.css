@@ -1,0 +1,116 @@
+.border-glow-card {
+  position: relative;
+  border-radius: var(--border-radius, 24px);
+  background: var(--card-bg, #FFFFFF);
+  border: 1.5px solid var(--border-base, rgba(194, 166, 140, 0.4));
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  box-sizing: border-box;
+}
+
+/* Outer ambient bloom behind the card */
+.border-glow-card .edge-bloom {
+  position: absolute;
+  inset: -6px;
+  border-radius: calc(var(--border-radius, 24px) + 6px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  filter: blur(16px);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  background: radial-gradient(
+    var(--glow-radius, 220px) circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--glow-color, rgba(248, 113, 113, 0.55)) 0%,
+    var(--glow-color-40, rgba(248, 113, 113, 0.25)) 45%,
+    transparent 75%
+  );
+}
+
+.border-glow-card.is-hovered .edge-bloom {
+  opacity: 0.85;
+}
+
+/* Inner content container */
+.border-glow-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  border-radius: calc(var(--border-radius, 24px) - 1.5px);
+  background: var(--card-bg, #FFFFFF);
+  overflow: hidden;
+}
+
+/* PROMINENT HIGHLIGHTED EDGE LIGHT ON TOP OF THE BORDER */
+.border-glow-card .edge-light {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 10;
+  padding: 2.5px;
+  box-sizing: border-box;
+
+  /* Cut out the inside, leaving only the perimeter edge */
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+
+  /* Multi-layer radiant edge beam */
+  background:
+    radial-gradient(
+      var(--glow-radius, 200px) circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      var(--glow-color, #F87171) 0%,
+      var(--glow-color-80, rgba(248, 113, 113, 0.85)) 25%,
+      var(--glow-color-50, rgba(248, 113, 113, 0.5)) 50%,
+      var(--glow-color-20, rgba(248, 113, 113, 0.2)) 75%,
+      transparent 90%
+    ),
+    conic-gradient(
+      from var(--cursor-angle, 0deg) at 50% 50%,
+      transparent 0deg,
+      var(--glow-color-30, rgba(248, 113, 113, 0.3)) calc(180deg - var(--cone-spread, 35) * 1.5deg),
+      var(--glow-color-80, rgba(248, 113, 113, 0.8)) calc(180deg - var(--cone-spread, 35) * 0.7deg),
+      var(--glow-color, #F87171) 180deg,
+      var(--glow-color-80, rgba(248, 113, 113, 0.8)) calc(180deg + var(--cone-spread, 35) * 0.7deg),
+      var(--glow-color-30, rgba(248, 113, 113, 0.3)) calc(180deg + var(--cone-spread, 35) * 1.5deg),
+      transparent calc(180deg + var(--cone-spread, 35) * 2deg),
+      transparent 360deg
+    );
+}
+
+.border-glow-card.is-hovered .edge-light {
+  opacity: 1;
+}
+
+/* Light mode specific hover enhancements */
+.border-glow-card--light {
+  box-shadow: 0 4px 16px -2px rgba(194, 166, 140, 0.18);
+}
+
+.border-glow-card--light.is-hovered {
+  border-color: rgba(93, 134, 108, 0.7);
+  box-shadow: 0 0 20px -2px rgba(93, 134, 108, 0.3), 0 10px 30px -4px rgba(194, 166, 140, 0.2);
+}
+
+/* Dark mode (Black & Light Red) specific hover enhancements */
+.border-glow-card--dark {
+  background: #141414;
+  border-color: rgba(248, 113, 113, 0.22);
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.85);
+}
+
+.border-glow-card--dark .border-glow-inner {
+  background: #141414;
+  color: #FAFAFA;
+}
+
+.border-glow-card--dark.is-hovered {
+  border-color: rgba(248, 113, 113, 0.9);
+  box-shadow: 
+    0 0 30px -2px rgba(248, 113, 113, 0.45), 
+    0 12px 36px rgba(0, 0, 0, 0.95);
+}
