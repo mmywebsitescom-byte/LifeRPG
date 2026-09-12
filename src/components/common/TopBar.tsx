@@ -62,6 +62,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   };
 
   const topNavItems: PillNavItem[] = [
+    { label: 'Home', href: '/' },
     { label: 'Dashboard', href: '/dashboard' },
     { label: 'Quests', href: '/quests' },
     { label: 'Character', href: '/character' },

@@ -13,7 +13,8 @@ import {
   Clock,
   CheckCheck,
   ShieldAlert,
-  Zap
+  Zap,
+  Home
 } from 'lucide-react';
 import { useGame } from '../context/GameContext';
 import { useTheme } from '../context/ThemeContext';
@@ -130,7 +131,22 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+          <button
+            type="button"
+            id="dash-btn-home"
+            onClick={() => navigate('/')}
+            className={`px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider border flex items-center gap-2 transition-all hover:scale-105 cursor-pointer ${
+              isDark
+                ? 'bg-[#141414] hover:bg-[#1E1214] text-zinc-300 hover:text-white border-[#F87171]/30 hover:border-[#F87171]'
+                : 'bg-white hover:bg-[#E6D8C3] text-[#1C1917] border-[#C2A68C]'
+            }`}
+            title="Return to Home Landing Page"
+          >
+            <Home className="w-4 h-4 text-emerald-500" />
+            <span>HOME</span>
+          </button>
+
           <button
             type="button"
             id="dash-btn-discover"

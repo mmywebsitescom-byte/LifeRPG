@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { 
+  Home,
   LayoutDashboard, 
   Scroll, 
   PlusCircle, 
@@ -25,6 +26,7 @@ export const Sidebar: React.FC = () => {
   const xpInfo = character ? getXpDetails(character.xp) : null;
 
   const navLinks = [
+    { to: '/', label: 'Home Page', icon: Home },
     { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { to: '/quests', label: 'My Quests', icon: Scroll },
     { to: '/quests/create', label: 'Create Quest', icon: PlusCircle },
