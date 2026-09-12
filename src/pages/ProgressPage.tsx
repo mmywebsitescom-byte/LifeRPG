@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   TrendingUp, 
   Flame, 
@@ -18,7 +18,6 @@ import { useGame } from '../context/GameContext';
 import { useTheme } from '../context/ThemeContext';
 import { XPBar } from '../components/common/XPBar';
 import { getXpDetails } from '../utils/rpgEngine';
-import { initialProgressSummary } from '../api/mockData';
 
 const attributeIcons: Record<string, string> = {
   strength: '⚔️',
@@ -35,15 +34,15 @@ export const ProgressPage: React.FC = () => {
 
   const [historyFilter, setHistoryFilter] = useState<'all' | 'today' | 'week'>('all');
 
-  const prog = progress || initialProgressSummary;
   const hero = character;
-  const xpInfo = hero ? getXpDetails(hero.xp) : {
-    level: 12,
-    currentLevelXp: 450,
-    requiredLevelXp: 900,
-    progressPercentage: 50,
-    nextLevel: 13,
-  };
+  const currentLevel = hero?.level ?? 1;
+  const totalXp = hero?.xp ?? 0;
+  const totalQuestsCompleted = progress?.totalQuestsCompleted ?? 0;
+  const currentStreak = hero?.streak ?? 0;
+  const longestStreak = hero?.longestStreak ?? 0;
+  const totalGoldEarned = progress?.totalGoldEarned ?? (hero?.gold ?? 0);
+
+  const xpInfo = getXpDetails(totalXp);
 
   const allHistory = history || [];
   const filteredHistory = allHistory.filter((item) => {
@@ -54,7 +53,40 @@ export const ProgressPage: React.FC = () => {
     return true;
   });
 
-  const maxChartXp = Math.max(...prog.chartData.map((d) => d.xp), 300);
+  // Generate real 7-day chart data based on history and actual dates
+  const chartData = useMemo(() => {
+    if (progress?.chartData && progress.chartData.length > 0) {
+      return progress.chartData;
+    }
+    const days: { date: string; xp: number; quests: number }[] = [];
+    const now = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const isoDate = d.toISOString().split('T')[0];
+
+      let dayXp = 0;
+      let dayQuests = 0;
+      allHistory.forEach((h) => {
+        if (h.timestamp?.includes(dateStr) || h.timestamp?.includes(isoDate)) {
+          dayXp += h.xpGained || 0;
+          if (h.type === 'quest_complete') dayQuests += 1;
+        }
+      });
+      days.push({ date: dateStr, xp: dayXp, quests: dayQuests });
+    }
+    return days;
+  }, [progress?.chartData, allHistory]);
+
+  const totalWeeklyXp = chartData.reduce((acc, d) => acc + d.xp, 0);
+  const avgDailyXp = Math.round(totalWeeklyXp / 7);
+
+  const timeline = (progress?.timeline && progress.timeline.length > 0)
+    ? progress.timeline
+    : [{ level: currentLevel, unlockedTitle: hero?.title || 'Apprentice Seeker', date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }];
+
+  const maxChartXp = Math.max(...chartData.map((d) => d.xp), 100);
 
   return (
     <div className="space-y-8 animate-fadeIn" id="progress-page-container">
@@ -100,9 +132,9 @@ export const ProgressPage: React.FC = () => {
             Hero Level
           </span>
           <span className={`text-2xl font-black font-mono ${isDark ? 'text-[#F87171]' : 'text-[#5D866C]'}`}>
-            {prog.currentLevel}
+            {currentLevel}
           </span>
-          <span className="text-[10px] text-zinc-500 block mt-0.5">Top 8% of Realm</span>
+          <span className="text-[10px] text-zinc-500 block mt-0.5">Current Rank</span>
         </div>
 
         <div className={`p-4 rounded-2xl border ${
@@ -112,7 +144,7 @@ export const ProgressPage: React.FC = () => {
             Total XP
           </span>
           <span className="text-2xl font-black font-mono text-amber-500">
-            {prog.totalXp.toLocaleString()}
+            {totalXp.toLocaleString()}
           </span>
           <span className="text-[10px] text-zinc-500 block mt-0.5">Cumulative Earned</span>
         </div>
@@ -124,7 +156,7 @@ export const ProgressPage: React.FC = () => {
             Quests Cleared
           </span>
           <span className={`text-2xl font-black font-mono ${isDark ? 'text-white' : 'text-[#1C1917]'}`}>
-            {prog.totalQuestsCompleted}
+            {totalQuestsCompleted}
           </span>
           <span className="text-[10px] text-zinc-500 block mt-0.5">Real-life tasks</span>
         </div>
@@ -137,7 +169,7 @@ export const ProgressPage: React.FC = () => {
           </span>
           <span className="text-2xl font-black font-mono text-amber-500 flex items-center gap-1">
             <Flame className="w-5 h-5 fill-amber-500" />
-            <span>{prog.currentStreak}d</span>
+            <span>{currentStreak}d</span>
           </span>
           <span className="text-[10px] text-zinc-500 block mt-0.5">Consecutive days</span>
         </div>
@@ -149,7 +181,7 @@ export const ProgressPage: React.FC = () => {
             Best Streak
           </span>
           <span className={`text-2xl font-black font-mono ${isDark ? 'text-white' : 'text-[#1C1917]'}`}>
-            {prog.longestStreak}d
+            {longestStreak}d
           </span>
           <span className="text-[10px] text-zinc-500 block mt-0.5">All-time record</span>
         </div>
@@ -162,7 +194,7 @@ export const ProgressPage: React.FC = () => {
           </span>
           <span className="text-2xl font-black font-mono text-yellow-500 flex items-center gap-1">
             <Coins className="w-5 h-5" />
-            <span>{prog.totalGoldEarned.toLocaleString()}</span>
+            <span>{totalGoldEarned.toLocaleString()}</span>
           </span>
           <span className="text-[10px] text-zinc-500 block mt-0.5">Bounties harvested</span>
         </div>
@@ -189,13 +221,13 @@ export const ProgressPage: React.FC = () => {
             <span className={`text-xs font-mono font-bold px-2.5 py-1 rounded-lg border ${
               isDark ? 'border-[#F87171]/40 text-[#F87171]' : 'border-[#5D866C]/40 text-[#5D866C]'
             }`}>
-              Avg: 220 XP/day
+              Avg: {avgDailyXp} XP/day
             </span>
           </div>
 
           {/* Bar Chart Visualization */}
           <div className="h-48 flex items-end justify-between gap-3 pt-6 border-b border-zinc-700/20 px-2">
-            {prog.chartData.map((item, idx) => {
+            {chartData.map((item, idx) => {
               const heightPercent = Math.min(100, Math.round((item.xp / maxChartXp) * 100));
 
               return (
@@ -328,7 +360,7 @@ export const ProgressPage: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            {prog.timeline.map((mile, i) => (
+            {timeline.map((mile, i) => (
               <div key={i} className="flex items-start gap-3 relative">
                 <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-xs font-mono font-bold border ${
                   isDark

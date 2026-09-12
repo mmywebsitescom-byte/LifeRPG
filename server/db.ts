@@ -74,79 +74,8 @@ function makeDefaultAchievements(): Achievement[] {
   ];
 }
 
-function makeStarterQuests(uid: string): Quest[] {
-  const today = new Date().toISOString().split('T')[0];
-  return [
-    {
-      id: `qst_${uid.slice(0, 6)}_101`,
-      userId: uid,
-      title: 'Study Core Algorithms & Systems',
-      description: 'Review system design concepts and algorithms for 45 minutes of deep focus study.',
-      category: 'Knowledge',
-      difficulty: 'Medium',
-      estimatedTime: '45m',
-      xpReward: 60,
-      goldReward: 25,
-      attribute: 'intelligence',
-      attributeReward: 6,
-      dueDate: today,
-      status: 'Active',
-      repeat: 'Daily',
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: `qst_${uid.slice(0, 6)}_102`,
-      userId: uid,
-      title: 'Calisthenics & Physical Conditioning',
-      description: 'Complete 3 sets of pushups, core holds, and dynamic movement to forge stamina.',
-      category: 'Fitness',
-      difficulty: 'Easy',
-      estimatedTime: '25m',
-      xpReward: 45,
-      goldReward: 20,
-      attribute: 'strength',
-      attributeReward: 5,
-      dueDate: today,
-      status: 'Active',
-      repeat: 'Daily',
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: `qst_${uid.slice(0, 6)}_103`,
-      userId: uid,
-      title: 'Mindful Evening Journaling',
-      description: 'Reflect on 3 wins from today and write down tomorrow’s highest priority task.',
-      category: 'Mindfulness',
-      difficulty: 'Easy',
-      estimatedTime: '15m',
-      xpReward: 40,
-      goldReward: 20,
-      attribute: 'wisdom',
-      attributeReward: 5,
-      dueDate: today,
-      status: 'Active',
-      repeat: 'Daily',
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: `qst_${uid.slice(0, 6)}_104`,
-      userId: uid,
-      title: 'Design Wireframe or Creative Prototype',
-      description: 'Draft a visual layout or creative composition to level up creative thinking.',
-      category: 'Creativity',
-      difficulty: 'Medium',
-      estimatedTime: '30m',
-      xpReward: 50,
-      goldReward: 25,
-      attribute: 'creativity',
-      attributeReward: 5,
-      dueDate: today,
-      status: 'Active',
-      repeat: 'Daily',
-      createdAt: new Date().toISOString(),
-    },
-  ];
-}
+// Starter quests removed — only user-created quests from the database are used
+
 
 function makeDefaultRewards(): RewardItem[] {
   return [
@@ -215,13 +144,7 @@ export class UserDatabase {
     if (!firestoreDb) return [];
     const snap = await userCol(this.uid, 'quests').orderBy('createdAt', 'desc').get();
     if (snap.empty) {
-      const defaults = makeStarterQuests(this.uid);
-      const batch = firestoreDb.batch();
-      for (const q of defaults) {
-        batch.set(userDoc(this.uid, 'quests', q.id), q);
-      }
-      await batch.commit();
-      return defaults;
+      return [];
     }
     return snap.docs.map((d) => d.data() as Quest);
   }
@@ -500,14 +423,12 @@ export class UserDatabase {
     const progress = makeDefaultProgress();
     const achievements = makeDefaultAchievements();
     const rewards = makeDefaultRewards();
-    const starterQuests = makeStarterQuests(this.uid);
     const batch = firestoreDb.batch();
     batch.set(firestoreDb.collection('users').doc(this.uid), user, { merge: true });
     batch.set(userDoc(this.uid, 'character', 'main'), char);
     batch.set(userDoc(this.uid, 'progress', 'summary'), progress);
     for (const ach of achievements) batch.set(userDoc(this.uid, 'achievements', ach.id), ach);
     for (const r of rewards) batch.set(userDoc(this.uid, 'rewards', r.id), r);
-    for (const q of starterQuests) batch.set(userDoc(this.uid, 'quests', q.id), q);
     await batch.commit();
     console.log('[Firestore] New user ' + this.uid + ' setup complete');
   }

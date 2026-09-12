@@ -341,12 +341,14 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   res.status(500).json({ success: false, error: err.message || 'Internal Server Error' });
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log('====================================================')
-  console.log('Sword  LIFE RPG Backend (Firebase) running on http://localhost:' + PORT)
-  console.log('Sword  REST API Ready at http://localhost:' + PORT + '/api')
-  console.log('====================================================')
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log('====================================================');
+    console.log(`⚔️  LIFE RPG Backend running on http://localhost:${PORT}`);
+    console.log(`⚔️  REST API Ready at http://localhost:${PORT}/api`);
+    console.log('====================================================');
+  });
+}
 
 export default app;
 

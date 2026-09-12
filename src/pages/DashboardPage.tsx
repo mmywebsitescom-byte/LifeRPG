@@ -24,7 +24,6 @@ import { AttributeCard } from '../components/common/AttributeCard';
 import { QuestCard } from '../components/common/QuestCard';
 import { DashboardSkeleton } from '../components/common/LoadingSkeleton';
 import { getXpDetails } from '../utils/rpgEngine';
-import { recommendedQuests } from '../api/mockData';
 import { getQuestDeadline } from '../utils/timeUtils';
 import { Avatar } from '../components/common/Avatar';
 
@@ -639,75 +638,6 @@ export const DashboardPage: React.FC = () => {
               Enter Shop
             </button>
           </div>
-        </div>
-      </div>
-
-      {/* Recommended Quests Section */}
-      <div className="pt-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Compass className={`w-5 h-5 ${isDark ? 'text-[#F87171]' : 'text-[#5D866C]'}`} />
-            <h3 className={`text-lg font-bold font-rpg ${
-              isDark ? 'text-white' : 'text-[#1C1917]'
-            }`}>
-              Recommended Daily Bounties
-            </h3>
-          </div>
-          <button
-            type="button"
-            onClick={() => navigate('/discover')}
-            className={`text-xs font-bold flex items-center gap-1 transition-colors cursor-pointer ${
-              isDark ? 'text-[#F87171] hover:text-[#EF4444]' : 'text-[#5D866C] hover:text-[#4B6E57]'
-            }`}
-          >
-            <span>Discover More</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {recommendedQuests.slice(0, 3).map((rec, i) => (
-            <div
-              key={i}
-              className={`p-4 rounded-2xl border shadow-sm transition-all flex flex-col justify-between ${
-                isDark
-                  ? 'bg-[#141414] border-[#F87171]/25 hover:border-[#F87171] shadow-sm shadow-[#F87171]/5 hover:shadow-[0_0_15px_rgba(248,113,113,0.15)]'
-                  : 'bg-white border-[#C2A68C] hover:border-[#5D866C]/50'
-              }`}
-            >
-              <div>
-                <div className="flex items-center justify-between text-[11px] font-bold mb-2">
-                  <span className={isDark ? 'text-[#F87171]' : 'text-[#5D866C]'}>{rec.category}</span>
-                  <span className={`font-mono ${isDark ? 'text-zinc-400' : 'text-[#78716C]'}`}>{rec.estimatedTime}</span>
-                </div>
-                <h4 className={`text-sm font-bold mb-1 ${isDark ? 'text-white' : 'text-[#1C1917]'}`}>
-                  {rec.title}
-                </h4>
-                <p className={`text-xs line-clamp-2 mb-3 ${isDark ? 'text-zinc-400' : 'text-[#57534E]'}`}>
-                  {rec.description}
-                </p>
-              </div>
-
-              <div className={`flex items-center justify-between pt-3 border-t text-xs ${
-                isDark ? 'border-[#F87171]/20' : 'border-[#C2A68C]'
-              }`}>
-                <div className={`font-mono font-bold ${isDark ? 'text-[#F87171]' : 'text-[#5D866C]'}`}>
-                  +{rec.xpReward} XP • +{rec.goldReward} Gold
-                </div>
-                <button
-                  type="button"
-                  onClick={() => addQuestFromDiscovery(rec)}
-                  className={`px-3 py-1.5 rounded-lg font-bold text-[11px] border transition-colors cursor-pointer ${
-                    isDark
-                      ? 'bg-[#1E1214] hover:bg-[#F87171] text-[#F87171] hover:text-black border-[#F87171]/40'
-                      : 'bg-[#E6D8C3] hover:bg-[#5D866C] hover:text-white text-[#1C1917] border-[#C2A68C]'
-                  }`}
-                >
-                  + ADD
-                </button>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </div>

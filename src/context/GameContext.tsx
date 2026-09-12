@@ -131,24 +131,17 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   }, []);
 
+  // Initialize quests purely from live database; purge any stale legacy localStorage cache
   const [quests, setQuestsState] = useState<Quest[]>(() => {
     try {
-      const raw = localStorage.getItem('liferpg_cached_quests');
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) return parsed;
-      }
+      localStorage.removeItem('liferpg_cached_quests');
     } catch {}
     return [];
   });
 
   const setQuests = useCallback((qsts: Quest[] | ((prev: Quest[]) => Quest[])) => {
     setQuestsState((prev) => {
-      const next = typeof qsts === 'function' ? qsts(prev) : qsts;
-      try {
-        localStorage.setItem('liferpg_cached_quests', JSON.stringify(next));
-      } catch {}
-      return next;
+      return typeof qsts === 'function' ? qsts(prev) : qsts;
     });
   }, []);
   const [achievements, setAchievements] = useState<Achievement[]>([]);

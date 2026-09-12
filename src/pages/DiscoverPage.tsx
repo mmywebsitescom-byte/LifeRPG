@@ -18,7 +18,6 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { useGame } from '../context/GameContext';
 import { useTheme } from '../context/ThemeContext';
-import { recommendedQuests } from '../api/mockData';
 import { QuestCategory, QuestDifficulty, AttributeType } from '../types';
 
 interface GeneratedQuest {
@@ -423,101 +422,6 @@ export const DiscoverPage: React.FC = () => {
         </div>
       )}
 
-      {/* Curated Recommendations Section */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className={`text-base font-black font-rpg tracking-wide ${isDark ? 'text-white' : 'text-[#1C1917]'}`}>
-              Curated Daily Hero Bounties
-            </h3>
-            <p className={`text-xs ${isDark ? 'text-zinc-400' : 'text-[#78716C]'}`}>
-              Hand-picked high-leverage habits proven to boost discipline, stamina, and intellectual clarity.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {recommendedQuests.map((item, idx) => {
-            const key = `rec_${idx}_${item.title}`;
-            const isAdded = addedIds.has(key);
-
-            return (
-              <div
-                key={key}
-                className={`p-5 rounded-2xl border flex flex-col justify-between transition-all ${
-                  isDark
-                    ? 'bg-[#141414] border-[#F87171]/20 hover:border-[#F87171]/40'
-                    : 'bg-white border-[#C2A68C] hover:border-[#5D866C]/40 shadow-sm'
-                }`}
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
-                      isDark ? 'border-[#F87171]/40 text-[#F87171]' : 'border-[#5D866C]/40 text-[#5D866C]'
-                    }`}>
-                      {item.category}
-                    </span>
-                    <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-mono">
-                      {item.difficulty}
-                    </span>
-                  </div>
-
-                  <h4 className={`text-sm font-bold mb-1.5 ${isDark ? 'text-white' : 'text-[#1C1917]'}`}>
-                    {item.title}
-                  </h4>
-                  <p className={`text-xs leading-relaxed mb-4 ${isDark ? 'text-zinc-400' : 'text-[#78716C]'}`}>
-                    {item.description}
-                  </p>
-                </div>
-
-                <div>
-                  <div className={`grid grid-cols-3 gap-2 p-2.5 rounded-xl text-center mb-3.5 ${
-                    isDark ? 'bg-black/40' : 'bg-[#E6D8C3]/30'
-                  }`}>
-                    <div>
-                      <span className={`block text-[9px] uppercase font-bold ${isDark ? 'text-zinc-400' : 'text-[#78716C]'}`}>XP</span>
-                      <span className="text-xs font-mono font-bold text-amber-500">+{item.xpReward}</span>
-                    </div>
-                    <div>
-                      <span className={`block text-[9px] uppercase font-bold ${isDark ? 'text-zinc-400' : 'text-[#78716C]'}`}>Gold</span>
-                      <span className="text-xs font-mono font-bold text-yellow-500">+{item.goldReward}</span>
-                    </div>
-                    <div>
-                      <span className={`block text-[9px] uppercase font-bold truncate ${isDark ? 'text-zinc-400' : 'text-[#78716C]'}`}>{item.attribute}</span>
-                      <span className={`text-xs font-mono font-bold ${isDark ? 'text-[#F87171]' : 'text-[#5D866C]'}`}>+{item.attributeReward}</span>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    disabled={isAdded}
-                    onClick={() => handleAddQuest(item as GeneratedQuest, key)}
-                    className={`w-full py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                      isAdded
-                        ? 'bg-emerald-500/20 text-emerald-500 border border-emerald-500/30 cursor-default'
-                        : isDark
-                          ? 'border border-[#F87171]/40 text-[#F87171] hover:bg-[#F87171]/10'
-                          : 'border border-[#5D866C]/40 text-[#5D866C] hover:bg-[#5D866C]/10'
-                    }`}
-                  >
-                    {isAdded ? (
-                      <>
-                        <Check className="w-3.5 h-3.5" />
-                        <span>In Quest Log</span>
-                      </>
-                    ) : (
-                      <>
-                        <PlusCircle className="w-3.5 h-3.5" />
-                        <span>Accept Bounty</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
     </div>
   );
 };
