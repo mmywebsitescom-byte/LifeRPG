@@ -91,6 +91,14 @@ function makeDefaultRewards(): RewardItem[] {
     { id:'rew_006', name:'Solar Flare Theme', description:'Warm gold solar theme.', price:350, category:'Themes', icon:'Sun', rarity:'Rare', owned:false },
     { id:'rew_007', name:'Ring of Deep Contemplation', description:'+6 Intelligence.', price:600, category:'Gear', icon:'Compass', rarity:'Epic', owned:false, equipped:false, statBonus:{attribute:'intelligence',amount:6} },
     { id:'rew_008', name:'Rune-Woven Scholar Cloak', description:'+8 Wisdom aesthetic.', price:850, category:'Gear', icon:'Shield', rarity:'Epic', owned:false, equipped:false },
+    // ─── Purchasable Achievements ──────────────────────────────────────────────
+    { id:'ach_rew_001', name:'Trailblazer Title', description:'Unlock the exclusive "TRAILBLAZER" hero title. Display it proudly on your character sheet.', price:150, category:'Achievements', icon:'Trophy', rarity:'Common', owned:false },
+    { id:'ach_rew_002', name:'Arcane Scholar Badge', description:'A shimmering badge marking you as a keeper of arcane knowledge. +4 Intelligence.', price:300, category:'Achievements', icon:'Sparkles', rarity:'Rare', owned:false, statBonus:{attribute:'intelligence',amount:4} },
+    { id:'ach_rew_003', name:'Streak Sentinel Medal', description:'Awarded to those who never break the chain. Grants the "SENTINEL" title + +3 Discipline.', price:500, category:'Achievements', icon:'Flame', rarity:'Rare', owned:false, statBonus:{attribute:'discipline',amount:3} },
+    { id:'ach_rew_004', name:'Vanguard of Discipline', description:'A legendary commendation for heroes with unbreakable resolve. +5 Discipline.', price:750, category:'Achievements', icon:'Shield', rarity:'Epic', owned:false, statBonus:{attribute:'discipline',amount:5} },
+    { id:'ach_rew_005', name:'GRANDMASTER Crest', description:'The highest honor in the realm. An ornate crest reserved for the most elite adventurers. +6 Wisdom + +6 Intelligence.', price:1500, category:'Achievements', icon:'Award', rarity:'Legendary', owned:false, statBonus:{attribute:'wisdom',amount:6} },
+    { id:'ach_rew_006', name:'Endurance Champion Trophy', description:'Celebrate your physical and mental fortitude. A gleaming trophy with +5 Endurance bonus.', price:600, category:'Achievements', icon:'Zap', rarity:'Epic', owned:false, statBonus:{attribute:'endurance',amount:5} },
+    { id:'ach_rew_007', name:'Creative Visionary Seal', description:'For those who forge new paths. A golden seal granting +4 Creativity.', price:400, category:'Achievements', icon:'Scroll', rarity:'Rare', owned:false, statBonus:{attribute:'creativity',amount:4} },
   ];
 }
 
@@ -345,7 +353,18 @@ export class UserDatabase {
       await batch.commit();
       return defaults;
     }
-    return snap.docs.map((d) => d.data() as RewardItem);
+    // Merge any new default items that don't exist for this user yet
+    const existing = snap.docs.map((d) => d.data() as RewardItem);
+    const existingIds = new Set(existing.map((r) => r.id));
+    const defaults = makeDefaultRewards();
+    const missing = defaults.filter((r) => !existingIds.has(r.id));
+    if (missing.length > 0) {
+      const batch = firestoreDb.batch();
+      for (const r of missing) batch.set(userDoc(this.uid, 'rewards', r.id), r);
+      await batch.commit();
+      return [...existing, ...missing];
+    }
+    return existing;
   }
 
   async purchaseReward(rewardId: string): Promise<{ reward: RewardItem; remainingGold: number }> {

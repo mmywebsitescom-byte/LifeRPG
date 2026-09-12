@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { GameProvider } from './context/GameContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { AppLayout } from './components/layout/AppLayout';
+import { ProtectedRoute, PublicOnlyRoute } from './components/common/ProtectedRoute';
 import ClickSpark from './components/common/ClickSpark';
 
 // Pages
@@ -20,6 +21,7 @@ import { ProgressPage } from './pages/ProgressPage';
 import { AchievementsPage } from './pages/AchievementsPage';
 import { RewardsPage } from './pages/RewardsPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { SupportPage } from './pages/SupportPage';
 
 function AppContent() {
   const { isDark } = useTheme();
@@ -34,15 +36,20 @@ function AppContent() {
     >
       <BrowserRouter>
         <Routes>
-          {/* Public Landing & Authentication */}
+          {/* Public Landing & Informational */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/how-it-works" element={<HowItWorksPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/character-creation" element={<CharacterCreationPage />} />
+          <Route path="/support" element={<SupportPage />} />
 
-          {/* Main RPG In-App Views */}
-          <Route element={<AppLayout />}>
+          {/* Auth Pages (redirects to /dashboard if already logged in) */}
+          <Route path="/login" element={<PublicOnlyRoute><LoginPage /></PublicOnlyRoute>} />
+          <Route path="/signup" element={<PublicOnlyRoute><SignUpPage /></PublicOnlyRoute>} />
+
+          {/* Character Creation (requires user login) */}
+          <Route path="/character-creation" element={<ProtectedRoute><CharacterCreationPage /></ProtectedRoute>} />
+
+          {/* Main RPG In-App Views (Strictly Protected: without sign-in, NO ONE can open the dashboard) */}
+          <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/quests" element={<QuestsPage />} />
             <Route path="/quests/create" element={<CreateQuestPage />} />
@@ -55,7 +62,7 @@ function AppContent() {
           </Route>
 
           {/* Fallback */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </ClickSpark>

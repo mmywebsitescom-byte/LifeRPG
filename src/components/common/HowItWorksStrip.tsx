@@ -133,6 +133,31 @@ interface HowItWorksStripProps {
   className?: string;
 }
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 30, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: 'spring',
+      damping: 20,
+      stiffness: 120,
+    },
+  },
+};
+
 export const HowItWorksStrip: React.FC<HowItWorksStripProps> = ({ className = '' }) => {
   const navigate = useNavigate();
   const { isDark } = useTheme();
@@ -140,55 +165,37 @@ export const HowItWorksStrip: React.FC<HowItWorksStripProps> = ({ className = ''
 
   return (
     <div className={`w-full ${className}`}>
-      {/* Outer wrapper for visual depth */}
-      <div 
-        className={`p-3 sm:p-6 rounded-[2.5rem] relative transition-colors duration-300 ${
-          isDark 
-            ? 'bg-[#110D0F] border border-[#F87171]/20' 
-            : 'bg-[#E6D8C3]/30 border border-[#C2A68C]/30'
-        }`}
-        style={{
-          backgroundImage: isDark 
-            ? 'radial-gradient(rgba(248, 113, 113, 0.2) 1.2px, transparent 1.2px)' 
-            : 'radial-gradient(#C2A68C 1.2px, transparent 1.2px)',
-          backgroundSize: '24px 24px',
-        }}
+      {/* 6-step responsive grid layout - clean, borderless, one-by-one scroll animation */}
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4"
       >
-        {/* Main unified card container */}
-        <div 
-          id="how-it-works-carousel-strip"
-          className={`rounded-[2rem] border overflow-hidden transition-colors duration-300 ${
-            isDark
-              ? 'bg-[#141414] border-[#F87171]/25 shadow-2xl shadow-black'
-              : 'bg-white border-[#C2A68C]/30 shadow-xl shadow-[#C2A68C]/15'
-          }`}
-        >
-          {/* 6-box responsive grid layout */}
-          <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 divide-y sm:divide-y-0 lg:divide-x ${
-            isDark ? 'divide-[#F87171]/15' : 'divide-[#C2A68C]/20'
-          }`}>
-            {STEPS.map((step, idx) => {
-              const Icon = step.icon;
-              const isActive = activeStepIndex === idx;
+        {STEPS.map((step, idx) => {
+          const Icon = step.icon;
+          const isActive = activeStepIndex === idx;
 
-              return (
-                <div
-                  key={step.id}
-                  id={`how-it-works-step-${idx + 1}`}
-                  onMouseEnter={() => setActiveStepIndex(idx)}
-                  onFocus={() => setActiveStepIndex(idx)}
-                  onClick={() => setActiveStepIndex(idx)}
-                  tabIndex={0}
-                  className={`relative p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 cursor-pointer select-none group min-h-[340px] sm:min-h-[370px] ${
-                    isActive
-                      ? isDark
-                        ? `${step.activeBgClassDark} shadow-inner lg:rounded-3xl m-1 sm:m-1.5 border border-[#F87171]/50`
-                        : `${step.activeBgClass} shadow-inner lg:rounded-3xl m-1 sm:m-1.5`
-                      : isDark
-                        ? 'bg-[#141414] hover:bg-[#1E1719]'
-                        : 'bg-white hover:bg-[#F5F5F0]/60'
-                  }`}
-                >
+          return (
+            <motion.div
+              variants={cardVariants}
+              key={step.id}
+              id={`how-it-works-step-${idx + 1}`}
+              onMouseEnter={() => setActiveStepIndex(idx)}
+              onFocus={() => setActiveStepIndex(idx)}
+              onClick={() => setActiveStepIndex(idx)}
+              tabIndex={0}
+              className={`relative p-6 sm:p-7 rounded-3xl flex flex-col justify-between transition-all duration-300 cursor-pointer select-none group min-h-[340px] sm:min-h-[370px] ${
+                isActive
+                  ? isDark
+                    ? `${step.activeBgClassDark} shadow-lg shadow-black/40`
+                    : `${step.activeBgClass} shadow-md`
+                  : isDark
+                    ? 'bg-[#141414] hover:bg-[#1E1719]'
+                    : 'bg-white hover:bg-[#F5F5F0]'
+              }`}
+            >
                   {/* Top: Circular Icon */}
                   <div>
                     <div className="flex items-center justify-between mb-7">
@@ -279,12 +286,10 @@ export const HowItWorksStrip: React.FC<HowItWorksStripProps> = ({ className = ''
                       </div>
                     )}
                   </div>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
-        </div>
-      </div>
+          </motion.div>
     </div>
   );
 };

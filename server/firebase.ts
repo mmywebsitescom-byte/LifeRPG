@@ -1,15 +1,31 @@
 import { initializeApp, cert, getApps, App, ServiceAccount } from 'firebase-admin/app';
 import { getFirestore, Firestore } from 'firebase-admin/firestore';
 import { getAuth, Auth } from 'firebase-admin/auth';
+import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
+
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local'), override: true });
+dotenv.config({ path: path.resolve(process.cwd(), '.env'), override: true });
 
 let app: App | null = null;
 let firestoreDb: Firestore | null = null;
 let adminAuth: Auth | null = null;
 
 function getServiceAccountCredential(): ServiceAccount | null {
-  // 1. Check FIREBASE_SERVICE_ACCOUNT environment variable (full JSON or base64 JSON)
+  // 1. Prefer local serviceAccountKey.json file if present (dedicated key for this workspace)
+  const serviceAccountPath = path.resolve(process.cwd(), 'server', 'serviceAccountKey.json');
+  if (fs.existsSync(serviceAccountPath)) {
+    try {
+      const content = fs.readFileSync(serviceAccountPath, 'utf-8');
+      const parsed = JSON.parse(content) as ServiceAccount;
+      return parsed;
+    } catch (err) {
+      console.warn('⚠️ [Firebase Admin] Failed to read server/serviceAccountKey.json:', err);
+    }
+  }
+
+  // 2. Check FIREBASE_SERVICE_ACCOUNT environment variable (full JSON or base64 JSON)
   if (process.env.FIREBASE_SERVICE_ACCOUNT) {
     try {
       const raw = process.env.FIREBASE_SERVICE_ACCOUNT.trim();
@@ -21,24 +37,13 @@ function getServiceAccountCredential(): ServiceAccount | null {
     }
   }
 
-  // 2. Check discrete environment variables (Vercel standard)
+  // 3. Check discrete environment variables (Vercel standard)
   if (process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
     return {
       projectId: process.env.FIREBASE_PROJECT_ID || 'teachersday-1e00c',
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
       privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
     };
-  }
-
-  // 3. Fallback: check local serviceAccountKey.json file
-  const serviceAccountPath = path.resolve(process.cwd(), 'server', 'serviceAccountKey.json');
-  if (fs.existsSync(serviceAccountPath)) {
-    try {
-      const content = fs.readFileSync(serviceAccountPath, 'utf-8');
-      return JSON.parse(content) as ServiceAccount;
-    } catch (err) {
-      console.warn('⚠️ [Firebase Admin] Failed to read server/serviceAccountKey.json:', err);
-    }
   }
 
   return null;

@@ -23,7 +23,7 @@ export const AppLayout: React.FC = () => {
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 pb-20 md:pb-8">
+      <div className="flex-1 flex flex-col min-w-0 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:pb-8">
         <TopBar />
         <main className="flex-1 px-4 sm:px-8 py-6 max-w-7xl w-full mx-auto">
           <ErrorBoundary>

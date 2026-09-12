@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Sparkles, Compass, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Sparkles, Compass, ArrowRight, LifeBuoy, Mail } from 'lucide-react';
 import { HowItWorksStrip } from '../components/common/HowItWorksStrip';
 import PillNav, { PillNavItem } from '../components/common/PillNav';
 import { useGame } from '../context/GameContext';
@@ -34,45 +34,24 @@ export const HowItWorksPage: React.FC = () => {
         ? 'bg-[#0A0A0A] text-[#FAFAFA] selection:bg-[#F87171] selection:text-black' 
         : 'bg-[#F5F5F0] text-[#1C1917] selection:bg-[#C2A68C] selection:text-[#5D866C]'
     }`}>
-      {/* Top Header */}
-      <header className={`sticky top-0 z-40 w-full backdrop-blur-xl border-b px-4 sm:px-10 py-3.5 flex items-center justify-between gap-4 transition-colors duration-300 ${
-        isDark 
-          ? 'bg-[#0A0A0A]/90 border-[#F87171]/20' 
-          : 'bg-[#F5F5F0]/90 border-[#C2A68C]'
-      }`}>
-        <div className="flex items-center gap-4 shrink-0">
+      {/* Top Header - clean, borderless floating buttons */}
+      <header className="sticky top-0 z-40 w-full px-4 sm:px-10 py-4 flex items-center justify-between gap-4 pointer-events-none">
+        <div className="flex items-center gap-4 shrink-0 pointer-events-auto">
           <Link
             to="/"
-            className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-colors ${
+            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
               isDark 
-                ? 'bg-[#141414] border-[#F87171]/30 text-white hover:border-[#F87171] hover:text-[#F87171]' 
-                : 'bg-white border-[#C2A68C] text-[#1C1917] hover:text-[#5D866C] hover:border-[#5D866C]'
+                ? 'bg-[#141414] text-white hover:text-[#F87171]' 
+                : 'bg-white text-[#1C1917] hover:text-[#5D866C]'
             }`}
             aria-label="Back to Home"
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <div 
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2.5 cursor-pointer"
-          >
-            <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-md ${
-              isDark 
-                ? 'bg-[#F87171] text-black shadow-[#F87171]/30' 
-                : 'bg-[#5D866C] text-white shadow-[#5D866C]/30'
-            }`}>
-              <span className="text-lg font-bold">⚔</span>
-            </div>
-            <span className={`text-xl font-black font-rpg tracking-wider ${
-              isDark ? 'text-white' : 'text-[#1C1917]'
-            }`}>
-              LIFE RPG
-            </span>
-          </div>
         </div>
 
         {/* PillNav Header Bar Buttons */}
-        <div className="flex-1 flex justify-center">
+        <div className="flex-1 flex justify-center pointer-events-auto">
           <PillNav
             items={navItems}
             activeHref="/how-it-works"
@@ -84,7 +63,7 @@ export const HowItWorksPage: React.FC = () => {
         </div>
 
         {/* Right Corner: ThemeToggle & CTA Button */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-3 shrink-0 pointer-events-auto">
           <ThemeToggle />
 
           <button
@@ -107,14 +86,6 @@ export const HowItWorksPage: React.FC = () => {
       <main className="flex-1 py-12 sm:py-16 px-4 sm:px-8 max-w-7xl mx-auto w-full flex flex-col justify-center">
         {/* Title Section */}
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
-          <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide mb-4 shadow-sm border ${
-            isDark 
-              ? 'bg-[#1C1214] border-[#F87171]/40 text-[#F87171]' 
-              : 'bg-[#E6D8C3] border-[#C2A68C] text-[#5D866C]'
-          }`}>
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>INTERACTIVE HERO BLUEPRINT</span>
-          </div>
           <h1 className={`text-3xl sm:text-5xl font-black font-rpg tracking-tight mb-4 ${
             isDark ? 'text-white' : 'text-[#1C1917]'
           }`}>
@@ -131,16 +102,16 @@ export const HowItWorksPage: React.FC = () => {
         <HowItWorksStrip className="mb-14" />
 
         {/* Quick Help / Call to Action */}
-        <div className={`p-6 sm:p-8 rounded-3xl border shadow-md flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left transition-colors ${
+        <div className={`p-6 sm:p-8 rounded-3xl shadow-md flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left transition-colors ${
           isDark 
-            ? 'bg-[#141414] border-[#F87171]/30 shadow-black' 
-            : 'bg-white border-[#C2A68C]'
+            ? 'bg-[#141414] shadow-black' 
+            : 'bg-white shadow-sm'
         }`}>
           <div className="flex items-center gap-4">
-            <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center shrink-0 ${
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${
               isDark 
-                ? 'bg-[#241518] border-[#F87171]/40 text-[#F87171]' 
-                : 'bg-[#E6D8C3] border-[#C2A68C] text-[#5D866C]'
+                ? 'bg-[#241518] text-[#F87171]' 
+                : 'bg-[#E6D8C3] text-[#5D866C]'
             }`}>
               <Compass className="w-6 h-6" />
             </div>
@@ -183,6 +154,48 @@ export const HowItWorksPage: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {/* Small Support Section */}
+        <div className={`mt-10 p-6 rounded-3xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all ${
+          isDark 
+            ? 'bg-[#141414] border-[#F87171]/25' 
+            : 'bg-white border-[#C2A68C]'
+        }`}>
+          <div className="flex items-center gap-3.5">
+            <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${
+              isDark ? 'bg-[#F87171]/20 text-[#F87171]' : 'bg-[#5D866C]/20 text-[#5D866C]'
+            }`}>
+              <LifeBuoy className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold font-rpg">Need Technical Assistance?</h3>
+              <p className={`text-xs ${isDark ? 'text-zinc-400' : 'text-[#78716C]'}`}>
+                Contact our technical engineers at <span className="font-mono font-bold">support@liferpg.dev</span> or visit the support sanctuary.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <a
+              href="mailto:support@liferpg.dev?subject=[LIFE%20RPG]%20Support"
+              className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-1.5 ${
+                isDark ? 'bg-white/5 border-white/10 text-white hover:bg-white/10' : 'bg-[#F5F5F0] border-[#C2A68C] text-[#1C1917]'
+              }`}
+            >
+              <Mail className="w-3.5 h-3.5" />
+              <span>Email</span>
+            </a>
+            <button
+              type="button"
+              onClick={() => navigate('/support')}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+                isDark ? 'bg-[#F87171] text-black hover:bg-[#ef4444]' : 'bg-[#5D866C] text-white hover:bg-[#4d705a]'
+              }`}
+            >
+              Support Page
+            </button>
+          </div>
+        </div>
       </main>
 
       {/* Footer */}
@@ -194,8 +207,11 @@ export const HowItWorksPage: React.FC = () => {
           <span>•</span>
           <span>“Don't just complete your tasks. Level up your life.”</span>
         </div>
-        <div>
-          <span>© 2026 Life RPG Hackathon</span>
+        <div className="flex items-center gap-6">
+          <Link to="/support" className={`hover:underline ${isDark ? 'hover:text-[#F87171]' : 'hover:text-[#5D866C]'}`}>
+            Support
+          </Link>
+          <span>© 2026 Life RPG</span>
         </div>
       </footer>
     </div>

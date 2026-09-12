@@ -1,0 +1,69 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: Check if user is authenticated with Firebase Auth
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper: Verify the logged-in user's UID matches the target user's document path
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // ============================================================================
+    // USER DATA & SUBCOLLECTIONS
+    // ============================================================================
+    // Each user can ONLY access and modify their own data and subcollections.
+    // No user can view, edit, or tamper with another hero's character, gold, or stats.
+    match /users/{userId} {
+      // User Profile (/users/{userId})
+      allow read, write: if isOwner(userId);
+
+      // Character stats, equipment, class, and gains (/users/{userId}/character/{characterId})
+      match /character/{characterId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Quests (/users/{userId}/quests/{questId})
+      match /quests/{questId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Achievements progression and unlocks (/users/{userId}/achievements/{achievementId})
+      match /achievements/{achievementId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Rewards and shop inventory items (/users/{userId}/rewards/{rewardId})
+      match /rewards/{rewardId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Level progress, streaks, and charts (/users/{userId}/progress/{progressId})
+      match /progress/{progressId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Activity logs and XP/Gold audit trail (/users/{userId}/history/{historyId})
+      match /history/{historyId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Catch-all for any additional subcollections under the user
+      match /{allUserPaths=**} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // ============================================================================
+    // GLOBAL RESTRICTION
+    // ============================================================================
+    // Deny access to all other unknown root documents by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

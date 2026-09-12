@@ -649,20 +649,24 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const loggedUser = await authApi.login(email, password);
       setUser(loggedUser);
-      const [char, qsts, achs, rews, his, prog] = await Promise.all([
-        characterApi.getCharacter(),
-        questApi.getQuests(),
-        achievementApi.getAchievements(),
-        rewardApi.getRewards(),
-        progressApi.getHistory('all'),
-        progressApi.getProgressSummary(),
-      ]);
-      setCharacter(char || null);
-      setQuests(qsts || []);
-      setAchievements(achs || []);
-      setRewards(rews || []);
-      setHistory(his || []);
-      setProgress(prog || null);
+      try {
+        const [charRes, qstsRes, achsRes, rewsRes, hisRes, progRes] = await Promise.allSettled([
+          characterApi.getCharacter(),
+          questApi.getQuests(),
+          achievementApi.getAchievements(),
+          rewardApi.getRewards(),
+          progressApi.getHistory('all'),
+          progressApi.getProgressSummary(),
+        ]);
+        if (charRes.status === 'fulfilled' && charRes.value) setCharacter(charRes.value);
+        if (qstsRes.status === 'fulfilled') setQuests(qstsRes.value || []);
+        if (achsRes.status === 'fulfilled') setAchievements(achsRes.value || []);
+        if (rewsRes.status === 'fulfilled') setRewards(rewsRes.value || []);
+        if (hisRes.status === 'fulfilled') setHistory(hisRes.value || []);
+        if (progRes.status === 'fulfilled') setProgress(progRes.value || null);
+      } catch (err) {
+        console.warn('Initial data load warning:', err);
+      }
       return loggedUser;
     } finally {
       setLoading(false);
@@ -674,20 +678,24 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const newUser = await authApi.signup(name, email, password);
       setUser(newUser);
-      const [char, qsts, achs, rews, his, prog] = await Promise.all([
-        characterApi.getCharacter(),
-        questApi.getQuests(),
-        achievementApi.getAchievements(),
-        rewardApi.getRewards(),
-        progressApi.getHistory('all'),
-        progressApi.getProgressSummary(),
-      ]);
-      setCharacter(char || null);
-      setQuests(qsts || []);
-      setAchievements(achs || []);
-      setRewards(rews || []);
-      setHistory(his || []);
-      setProgress(prog || null);
+      try {
+        const [charRes, qstsRes, achsRes, rewsRes, hisRes, progRes] = await Promise.allSettled([
+          characterApi.getCharacter(),
+          questApi.getQuests(),
+          achievementApi.getAchievements(),
+          rewardApi.getRewards(),
+          progressApi.getHistory('all'),
+          progressApi.getProgressSummary(),
+        ]);
+        if (charRes.status === 'fulfilled' && charRes.value) setCharacter(charRes.value);
+        if (qstsRes.status === 'fulfilled') setQuests(qstsRes.value || []);
+        if (achsRes.status === 'fulfilled') setAchievements(achsRes.value || []);
+        if (rewsRes.status === 'fulfilled') setRewards(rewsRes.value || []);
+        if (hisRes.status === 'fulfilled') setHistory(hisRes.value || []);
+        if (progRes.status === 'fulfilled') setProgress(progRes.value || null);
+      } catch (err) {
+        console.warn('Initial signup data load warning:', err);
+      }
       return newUser;
     } finally {
       setLoading(false);

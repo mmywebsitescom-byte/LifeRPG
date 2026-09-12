@@ -11,6 +11,7 @@ import {
   TrendingUp,
   Trophy,
   Settings,
+  LifeBuoy,
   X
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -34,6 +35,7 @@ export const MobileNavigation: React.FC = () => {
     { to: '/progress', label: 'Progress & History', icon: TrendingUp, color: 'text-[#16A34A]' },
     { to: '/achievements', label: 'Achievements', icon: Trophy, color: 'text-[#9333EA]' },
     { to: '/settings', label: 'Settings', icon: Settings, color: isDark ? 'text-zinc-400' : 'text-[#57534E]' },
+    { to: '/support', label: 'Tech Support', icon: LifeBuoy, color: isDark ? 'text-[#F87171]' : 'text-[#5D866C]' },
   ];
 
   return (
@@ -41,11 +43,15 @@ export const MobileNavigation: React.FC = () => {
       {/* Fixed Bottom Bar */}
       <nav
         id="mobile-bottom-nav"
-        className={`md:hidden fixed bottom-0 left-0 right-0 h-16 backdrop-blur-xl border-t z-40 px-2 flex items-center justify-around shadow-lg transition-colors ${
+        className={`md:hidden fixed bottom-0 left-0 right-0 backdrop-blur-xl border-t z-40 px-2 flex items-center justify-around shadow-lg transition-colors ${
           isDark
             ? 'bg-[#0F0F0F]/95 border-[#F87171]/20'
             : 'bg-[#E6D8C3]/95 border-[#C2A68C]'
         }`}
+        style={{
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+          height: 'calc(4rem + env(safe-area-inset-bottom, 0px))',
+        }}
         aria-label="Mobile Bottom Navigation"
       >
         {mainTabs.map((tab) => {

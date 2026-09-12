@@ -24,12 +24,14 @@ function loadStoredUser(): User | null {
   }
 }
 
+import { DEFAULT_REWARDS } from './defaultRewards';
+
 class InMemoryStore {
   public user: User | null = loadStoredUser();
   public character: Character | null = null;
   public quests: Quest[] = [];
   public achievements: Achievement[] = [];
-  public rewards: RewardItem[] = [];
+  public rewards: RewardItem[] = [...DEFAULT_REWARDS];
   public history: HistoryRecord[] = [];
   public progress: ProgressSummary | null = null;
 

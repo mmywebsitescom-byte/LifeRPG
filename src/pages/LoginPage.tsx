@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Mail, Lock, AlertCircle, Sparkles, ArrowRight, ArrowLeft, LogOut, CheckCircle2 } from 'lucide-react';
-import { authApi } from '../api/authApi';
+import { authApi, formatFirebaseAuthError } from '../api/authApi';
 import { useGame } from '../context/GameContext';
 import { useTheme } from '../context/ThemeContext';
 import { ThemeToggle } from '../components/common/ThemeToggle';
@@ -43,7 +43,7 @@ export const LoginPage: React.FC = () => {
       });
       navigate('/dashboard', { replace: true });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Invalid credentials';
+      const msg = err instanceof Error ? formatFirebaseAuthError(err) : 'Invalid credentials';
       setError(msg);
     } finally {
       setLoading(false);
@@ -61,7 +61,7 @@ export const LoginPage: React.FC = () => {
       });
       navigate('/dashboard', { replace: true });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Google sign-in failed';
+      const msg = err instanceof Error ? formatFirebaseAuthError(err) : 'Google sign-in failed';
       setError(msg);
     } finally {
       setLoading(false);
@@ -201,14 +201,27 @@ export const LoginPage: React.FC = () => {
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
-                  className={`p-3 mb-5 rounded-xl border text-xs flex items-center gap-2 ${
+                  className={`p-3.5 mb-5 rounded-xl border text-xs flex flex-col gap-2 ${
                     isDark 
-                      ? 'bg-rose-950/50 border-rose-800 text-rose-300' 
+                      ? 'bg-rose-950/50 border-rose-800/80 text-rose-300' 
                       : 'bg-rose-50 border-rose-200 text-rose-700'
                   }`}
                 >
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  <span>{error}</span>
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                    <span className="font-medium leading-relaxed">{error}</span>
+                  </div>
+                  {error.toLowerCase().includes('authorized domain') && (
+                    <div className={`mt-1 pt-2 border-t text-[11px] space-y-1.5 ${
+                      isDark ? 'border-rose-900 text-zinc-300' : 'border-rose-200 text-zinc-700'
+                    }`}>
+                      <p className="font-bold text-amber-400">🛠️ How to fix in Firebase Console:</p>
+                      <p>1. Open <a href="https://console.firebase.google.com" target="_blank" rel="noreferrer" className="underline font-bold text-amber-300">Firebase Console</a></p>
+                      <p>2. Go to <strong>Authentication</strong> → <strong>Settings</strong> tab</p>
+                      <p>3. Scroll down to <strong>Authorized domains</strong> → click <strong>Add domain</strong></p>
+                      <p>4. Add your domain: <code className="px-1.5 py-0.5 rounded bg-black/40 font-mono text-amber-300">{window.location.hostname}</code></p>
+                    </div>
+                  )}
                 </motion.div>
               )}
 
@@ -365,6 +378,18 @@ export const LoginPage: React.FC = () => {
                   }`}
                 >
                   Create Your Character
+                </Link>
+              </div>
+
+              <div className={`mt-2.5 text-center text-xs ${isDark ? 'text-zinc-500' : 'text-[#78716C]'}`}>
+                Encountering a technical error?{' '}
+                <Link
+                  to="/support"
+                  className={`font-bold underline transition-colors ${
+                    isDark ? 'text-zinc-300 hover:text-[#F87171]' : 'text-[#1C1917] hover:text-[#5D866C]'
+                  }`}
+                >
+                  Contact Technical Support
                 </Link>
               </div>
             </>

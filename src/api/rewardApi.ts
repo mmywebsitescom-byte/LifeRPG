@@ -1,16 +1,20 @@
 import { RewardItem } from '../types';
 import { dbStore } from './store';
 import { fetchJson } from './client';
+import { DEFAULT_REWARDS } from './defaultRewards';
 
 export const rewardApi = {
   async getRewards(): Promise<RewardItem[]> {
     try {
       const data = await fetchJson<RewardItem[]>('/api/rewards');
-      dbStore.rewards = data;
-      return [...data];
+      if (Array.isArray(data) && data.length > 0) {
+        dbStore.rewards = data;
+        return [...data];
+      }
+      return dbStore.rewards.length > 0 ? [...dbStore.rewards] : [...DEFAULT_REWARDS];
     } catch {
       await dbStore.delay(100);
-      return [...dbStore.rewards];
+      return dbStore.rewards.length > 0 ? [...dbStore.rewards] : [...DEFAULT_REWARDS];
     }
   },
 

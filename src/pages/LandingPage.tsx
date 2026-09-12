@@ -9,10 +9,16 @@ import {
   Coins, 
   ArrowRight, 
   Brain, 
-  TrendingUp,
-  UserCheck,
-  Compass,
-  ShieldCheck
+  TrendingUp, 
+  UserCheck, 
+  Compass, 
+  ShieldCheck, 
+  Shield, 
+  Star,
+  LifeBuoy,
+  Mail,
+  Copy,
+  Check
 } from 'lucide-react';
 import { useGame } from '../context/GameContext';
 import { useTheme } from '../context/ThemeContext';
@@ -20,14 +26,58 @@ import { HowItWorksStrip } from '../components/common/HowItWorksStrip';
 import PillNav, { PillNavItem } from '../components/common/PillNav';
 import BorderGlow from '../components/common/BorderGlow';
 import { ThemeToggle } from '../components/common/ThemeToggle';
+// ── Scroll Reveal Animation Variants ─────────────────────────────────────────
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const staggerItem = {
+  hidden: { opacity: 0, y: 30, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: 'spring',
+      damping: 20,
+      stiffness: 120,
+    },
+  },
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useGame();
   const { isDark } = useTheme();
+  const [copiedEmail, setCopiedEmail] = React.useState(false);
 
   // If the user is authenticated
   const isAuthenticated = Boolean(user && user.email);
+
+  const handleCopySupportEmail = () => {
+    navigator.clipboard.writeText('support@liferpg.dev');
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 2000);
+  };
 
   const handleCtaAction = () => {
     if (isAuthenticated) {
@@ -82,11 +132,17 @@ export const LandingPage: React.FC = () => {
     { label: 'Home', href: '/' },
     { label: 'About', href: '#about' },
     { label: 'How It Works', href: '/how-it-works' },
+    { label: 'Support', href: '#support' },
   ];
 
   const handleNavItemClick = (item: PillNavItem) => {
     if (item.href === '#about') {
       const el = document.getElementById('about');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else if (item.href === '#support') {
+      const el = document.getElementById('support');
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
       }
@@ -101,32 +157,13 @@ export const LandingPage: React.FC = () => {
         ? 'bg-[#0A0A0A] text-[#FAFAFA] selection:bg-[#F87171] selection:text-black' 
         : 'bg-[#F5F5F0] text-[#1C1917] selection:bg-[#C2A68C] selection:text-[#5D866C]'
     }`}>
-      {/* Header */}
-      <header className={`sticky top-0 z-40 w-full backdrop-blur-xl border-b px-4 sm:px-10 py-3.5 flex items-center justify-between gap-4 transition-colors duration-300 ${
-        isDark 
-          ? 'bg-[#0A0A0A]/90 border-[#F87171]/20' 
-          : 'bg-[#F5F5F0]/90 border-[#C2A68C]'
-      }`}>
-        <div 
-          onClick={() => navigate('/')} 
-          className="flex items-center gap-3 cursor-pointer group shrink-0"
-        >
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105 ${
-            isDark 
-              ? 'bg-[#F87171] text-black shadow-lg shadow-[#F87171]/30' 
-              : 'bg-[#5D866C] text-white shadow-md shadow-[#5D866C]/30'
-          }`}>
-            <span className="text-xl font-bold">⚔</span>
-          </div>
-          <span className={`text-xl font-black font-rpg tracking-wider ${
-            isDark ? 'text-white' : 'text-[#1C1917]'
-          }`}>
-            LIFE RPG
-          </span>
-        </div>
+      {/* Header - Buttons only, no header bar */}
+      <header className="sticky top-0 z-40 w-full px-4 sm:px-10 py-4 flex items-center justify-between gap-4 pointer-events-none">
+        {/* Invisible spacer on left to keep pill nav centered on desktop */}
+        <div className="hidden sm:block w-28 shrink-0" />
 
-        {/* PillNav Header Bar Buttons: Home, About, How It Works */}
-        <div className="flex-1 flex justify-center">
+        {/* PillNav Buttons: Home, About, How It Works */}
+        <div className="flex-1 flex justify-center pointer-events-auto">
           <PillNav
             items={landingNavItems}
             baseColor={isDark ? '#141414' : '#FFFFFF'}
@@ -138,8 +175,8 @@ export const LandingPage: React.FC = () => {
           />
         </div>
 
-        {/* Right Corner: Theme Toggle & Get Started / Go Dashboard Button */}
-        <div className="flex items-center gap-3 shrink-0">
+        {/* Right Corner Buttons: Theme Toggle & Get Started */}
+        <div className="flex items-center gap-3 shrink-0 pointer-events-auto">
           <ThemeToggle />
 
           <button
@@ -159,36 +196,16 @@ export const LandingPage: React.FC = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative pt-16 sm:pt-24 pb-20 px-6 sm:px-12 max-w-7xl mx-auto w-full flex flex-col items-center text-center">
-        {/* Ambient background orbs */}
-        <div className={`absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full blur-3xl pointer-events-none transition-colors duration-500 ${
-          isDark ? 'bg-[#F87171]/10' : 'bg-[#C2A68C]/50'
-        }`} />
-        <div className={`absolute top-1/3 left-1/4 w-80 h-80 rounded-full blur-3xl pointer-events-none transition-colors duration-500 ${
-          isDark ? 'bg-[#EF4444]/10' : 'bg-[#E6D8C3]'
-        }`} />
+      <section className="relative pt-16 sm:pt-24 pb-20 px-6 sm:px-12 w-full flex flex-col items-center text-center overflow-hidden">
 
-        {/* Hero Pill */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide mb-6 shadow-sm border ${
-            isDark 
-              ? 'bg-[#1C1214] border-[#F87171]/40 text-[#F87171]' 
-              : 'bg-[#E6D8C3] border-[#C2A68C] text-[#5D866C]'
-          }`}
-        >
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>HACKATHON PRODUCTIVITY ENGINE</span>
-        </motion.div>
 
         {/* Big Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className={`text-4xl sm:text-6xl lg:text-7xl font-black font-rpg tracking-tight max-w-4xl leading-tight mb-6 ${
-            isDark ? 'text-white' : 'text-[#1C1917]'
+          className={`relative z-10 text-4xl sm:text-6xl lg:text-7xl font-black font-rpg tracking-tight max-w-4xl leading-tight mb-6 ${
+            isDark ? 'text-white drop-shadow-lg' : 'text-[#1C1917]'
           }`}
         >
           LEVEL UP YOUR <span className={isDark ? 'text-[#F87171]' : 'text-[#5D866C]'}>LIFE</span>
@@ -199,7 +216,7 @@ export const LandingPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.5 }}
-          className={`text-lg sm:text-xl max-w-2xl font-medium mb-10 leading-relaxed ${
+          className={`relative z-10 text-lg sm:text-xl max-w-2xl font-medium mb-10 leading-relaxed ${
             isDark ? 'text-zinc-300' : 'text-[#57534E]'
           }`}
         >
@@ -215,7 +232,7 @@ export const LandingPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
-          className="flex flex-col sm:flex-row items-center gap-4 mb-16"
+          className="relative z-10 flex flex-col sm:flex-row items-center gap-4 mb-16"
         >
           <button
             type="button"
@@ -247,12 +264,13 @@ export const LandingPage: React.FC = () => {
         {/* Core Loop Progression Pipeline */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3 }}
-          className={`w-full max-w-4xl p-6 rounded-3xl border mb-16 shadow-lg transition-colors ${
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5 }}
+          className={`relative z-10 w-full max-w-4xl p-6 rounded-3xl border mb-16 shadow-lg transition-colors ${
             isDark 
-              ? 'bg-[#141414] border-[#F87171]/20 shadow-black' 
-              : 'bg-white border-[#C2A68C]'
+              ? 'bg-[#141414]/80 border-[#F87171]/20 shadow-black backdrop-blur-sm' 
+              : 'bg-white/80 border-[#C2A68C] backdrop-blur-sm'
           }`}
         >
           <div className={`text-xs uppercase font-bold tracking-widest mb-6 ${
@@ -260,11 +278,20 @@ export const LandingPage: React.FC = () => {
           }`}>
             The Hero's Progression Loop
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
+          <motion.div 
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="grid grid-cols-1 sm:grid-cols-5 gap-3"
+          >
             {progressionSteps.map((step, idx) => {
               const Icon = step.icon;
               return (
-                <div key={idx} className={`relative flex flex-col items-center p-3 rounded-2xl border text-center transition-colors ${
+                <motion.div 
+                  variants={staggerItem}
+                  key={idx} 
+                  className={`relative flex flex-col items-center p-3 rounded-2xl border text-center transition-colors ${
                   isDark 
                     ? 'bg-[#1A1315] border-[#F87171]/25' 
                     : 'bg-[#F5F5F0] border-[#C2A68C]'
@@ -282,16 +309,22 @@ export const LandingPage: React.FC = () => {
                   <span className={`text-[10px] mt-0.5 ${isDark ? 'text-zinc-400' : 'text-[#78716C]'}`}>
                     {step.desc}
                   </span>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </motion.div>
       </section>
 
       {/* Feature Section with glowing highlighted border cards */}
       <section id="features" className="py-20 px-6 sm:px-12 max-w-7xl mx-auto w-full">
-        <div className="text-center max-w-2xl mx-auto mb-16">
+        <motion.div 
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          className="text-center max-w-2xl mx-auto mb-16"
+        >
           <h2 className={`text-3xl sm:text-4xl font-extrabold font-rpg mb-4 ${
             isDark ? 'text-white' : 'text-[#1C1917]'
           }`}>
@@ -300,39 +333,52 @@ export const LandingPage: React.FC = () => {
           <p className={`text-sm ${isDark ? 'text-zinc-400' : 'text-[#78716C]'}`}>
             Engineered with game theory mechanics to keep you focused, motivated, and perpetually growing.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           {features.map((feat, idx) => (
-            <BorderGlow
-              key={idx}
-              borderRadius={20}
-              className="h-full"
-            >
-              <div className="p-6 h-full flex flex-col justify-between">
-                <div>
-                  <h3 className={`text-base font-bold font-rpg mb-2.5 ${
-                    isDark ? 'text-white' : 'text-[#1C1917]'
-                  }`}>
-                    {feat.title}
-                  </h3>
-                  <p className={`text-xs leading-relaxed ${
-                    isDark ? 'text-zinc-400' : 'text-[#57534E]'
-                  }`}>
-                    {feat.description}
-                  </p>
+            <motion.div variants={staggerItem} key={idx} className="h-full">
+              <BorderGlow
+                borderRadius={20}
+                className="h-full"
+              >
+                <div className="p-6 h-full flex flex-col justify-between">
+                  <div>
+                    <h3 className={`text-base font-bold font-rpg mb-2.5 ${
+                      isDark ? 'text-white' : 'text-[#1C1917]'
+                    }`}>
+                      {feat.title}
+                    </h3>
+                    <p className={`text-xs leading-relaxed ${
+                      isDark ? 'text-zinc-400' : 'text-[#57534E]'
+                    }`}>
+                      {feat.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </BorderGlow>
+              </BorderGlow>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* About Section with glowing highlighted border cards */}
       <section id="about" className={`py-20 px-6 sm:px-12 max-w-7xl mx-auto w-full border-t transition-colors ${
         isDark ? 'border-[#F87171]/20' : 'border-[#C2A68C]/50'
       }`}>
-        <div className="text-center max-w-2xl mx-auto mb-16">
+        <motion.div 
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          className="text-center max-w-2xl mx-auto mb-16"
+        >
           <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide mb-4 shadow-sm border ${
             isDark 
               ? 'bg-[#1C1214] border-[#F87171]/40 text-[#F87171]' 
@@ -352,10 +398,16 @@ export const LandingPage: React.FC = () => {
             Human minds are hardwired for immediate adventure, clear objectives, and tangible feedback loops. 
             Traditional productivity apps treat your daily work like a tedious chore checklist. We transform your real-world goals into an epic quest for heroic mastery.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <BorderGlow borderRadius={24} className="h-full">
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          <motion.div variants={staggerItem} className="h-full"><BorderGlow borderRadius={24} className="h-full">
             <div className="p-7 h-full flex flex-col justify-between">
               <div>
                 <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center mb-5 ${
@@ -382,9 +434,9 @@ export const LandingPage: React.FC = () => {
                 Attribute Impact • STR • INT • DIS
               </div>
             </div>
-          </BorderGlow>
+          </BorderGlow></motion.div>
 
-          <BorderGlow borderRadius={24} className="h-full">
+          <motion.div variants={staggerItem} className="h-full"><BorderGlow borderRadius={24} className="h-full">
             <div className="p-7 h-full flex flex-col justify-between">
               <div>
                 <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center mb-5 ${
@@ -411,9 +463,9 @@ export const LandingPage: React.FC = () => {
                 Dopamine Loops • Zero Burnout
               </div>
             </div>
-          </BorderGlow>
+          </BorderGlow></motion.div>
 
-          <BorderGlow borderRadius={24} className="h-full">
+          <motion.div variants={staggerItem} className="h-full"><BorderGlow borderRadius={24} className="h-full">
             <div className="p-7 h-full flex flex-col justify-between">
               <div>
                 <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center mb-5 ${
@@ -440,13 +492,19 @@ export const LandingPage: React.FC = () => {
                 Self-Defined Rewards • Real Pride
               </div>
             </div>
-          </BorderGlow>
-        </div>
+          </BorderGlow></motion.div>
+        </motion.div>
       </section>
 
       {/* How It Works Section */}
       <section id="how-it-works" className="py-20 px-4 sm:px-8 max-w-7xl mx-auto w-full">
-        <div className="text-center max-w-2xl mx-auto mb-14">
+        <motion.div 
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          className="text-center max-w-2xl mx-auto mb-14"
+        >
           <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide mb-4 shadow-sm border ${
             isDark 
               ? 'bg-[#1C1214] border-[#F87171]/40 text-[#F87171]' 
@@ -463,14 +521,14 @@ export const LandingPage: React.FC = () => {
           <p className={`text-sm ${isDark ? 'text-zinc-400' : 'text-[#78716C]'}`}>
             Hover over any step to reveal its progression mechanic and interactive action loop.
           </p>
-        </div>
+        </motion.div>
 
         <HowItWorksStrip />
       </section>
 
       {/* Final Call to Action */}
       <section id="rewards" className="py-20 px-6 sm:px-12 max-w-5xl mx-auto w-full text-center">
-        <div className={`p-8 sm:p-12 rounded-3xl border-2 shadow-xl relative overflow-hidden transition-colors ${
+        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} className={`p-8 sm:p-12 rounded-3xl border-2 shadow-xl relative overflow-hidden transition-colors ${
           isDark 
             ? 'bg-[#181113] border-[#F87171]/50 shadow-black' 
             : 'bg-[#E6D8C3] border-[#C2A68C]'
@@ -496,6 +554,93 @@ export const LandingPage: React.FC = () => {
           >
             {isAuthenticated ? 'Go Dashboard' : 'Get Started'}
           </button>
+        </motion.div>
+      </section>
+
+      {/* Support Section on Landing Page */}
+      <section id="support" className="py-8 px-6 sm:px-12 max-w-5xl mx-auto w-full">
+        <div className={`p-6 sm:p-8 rounded-3xl border transition-all ${
+          isDark 
+            ? 'bg-gradient-to-br from-[#141414] via-[#120F10] to-[#1E1214] border-[#F87171]/30 shadow-xl shadow-[#F87171]/5' 
+            : 'bg-gradient-to-br from-[#FAF7F2] via-[#E6D8C3]/50 to-[#FAF7F2] border-[#C2A68C] shadow-md'
+        }`}>
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            <div className="space-y-2.5 max-w-xl">
+              <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${
+                isDark ? 'bg-[#F87171]/15 text-[#F87171] border border-[#F87171]/30' : 'bg-[#5D866C]/15 text-[#5D866C] border border-[#5D866C]/30'
+              }`}>
+                <LifeBuoy className="w-3.5 h-3.5" />
+                <span>Technical Support &amp; Incident Desk</span>
+              </div>
+
+              <h3 className={`text-xl sm:text-2xl font-black font-rpg tracking-tight ${
+                isDark ? 'text-white' : 'text-[#1C1917]'
+              }`}>
+                Need Technical Assistance?
+              </h3>
+
+              <p className={`text-xs sm:text-sm leading-relaxed ${
+                isDark ? 'text-zinc-300' : 'text-[#57534E]'
+              }`}>
+                Encountering an error, sign-in glitch, or syncing anomaly? Reach our technical engineers directly or contact us via email.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-3 pt-1 text-xs">
+                <span className="flex items-center gap-1.5 font-mono font-bold">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  <span className={isDark ? 'text-zinc-400' : 'text-zinc-600'}>support@liferpg.dev</span>
+                </span>
+                <span className="opacity-40">•</span>
+                <span className={`text-[11px] font-mono ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+                  Response: &lt; 24 Hours
+                </span>
+              </div>
+            </div>
+
+            {/* Support Actions */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto shrink-0">
+              <button
+                type="button"
+                onClick={handleCopySupportEmail}
+                className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition-all cursor-pointer ${
+                  isDark 
+                    ? 'bg-white/5 border-[#F87171]/30 hover:bg-white/10 text-white' 
+                    : 'bg-white border-[#C2A68C] hover:bg-[#F5F5F0] text-[#1C1917]'
+                }`}
+              >
+                {copiedEmail ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedEmail ? 'Email Copied!' : 'Copy Email'}</span>
+              </button>
+
+              <a
+                href="mailto:support@liferpg.dev?subject=[LIFE%20RPG]%20Technical%20Assistance%20Request"
+                className={`px-4 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition-all ${
+                  isDark 
+                    ? 'bg-[#1E1214] border-[#F87171]/40 text-[#F87171] hover:bg-[#F87171]/20' 
+                    : 'bg-[#E6D8C3] border-[#C2A68C] text-[#5D866C] hover:bg-[#C2A68C]/40'
+                }`}
+              >
+                <Mail className="w-3.5 h-3.5" />
+                <span>Send Email</span>
+              </a>
+
+              <button
+                type="button"
+                onClick={() => navigate('/support')}
+                className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer ${
+                  isDark 
+                    ? 'bg-[#F87171] text-black hover:bg-[#ef4444] shadow-[#F87171]/25' 
+                    : 'bg-[#5D866C] text-white hover:bg-[#4d705a] shadow-[#5D866C]/25'
+                }`}
+              >
+                <span>Support Sanctuary</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -512,8 +657,9 @@ export const LandingPage: React.FC = () => {
         </div>
         <div className="flex items-center gap-6">
           <span className={`cursor-pointer ${isDark ? 'hover:text-[#F87171]' : 'hover:text-[#1C1917]'}`} onClick={() => navigate('/login')}>Login</span>
-          <span className={`cursor-pointer ${isDark ? 'hover:text-[#F87171]' : 'hover:text-[#1C1917]'}`} onClick={() => navigate('/dashboard')}>Demo</span>
-          <span>© 2026 Life RPG Hackathon</span>
+          <span className={`cursor-pointer ${isDark ? 'hover:text-[#F87171]' : 'hover:text-[#1C1917]'}`} onClick={() => navigate('/support')}>Support</span>
+          <span className={`cursor-pointer ${isDark ? 'hover:text-[#F87171]' : 'hover:text-[#1C1917]'}`} onClick={() => navigate(isAuthenticated ? '/dashboard' : '/login')}>{isAuthenticated ? 'Dashboard' : 'Sign In'}</span>
+          <span>© 2026 Life RPG</span>
         </div>
       </footer>
     </div>

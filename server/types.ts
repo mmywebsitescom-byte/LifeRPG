@@ -105,6 +105,7 @@ export interface Achievement {
   unlockedAt?: string;
   rewardXp: number;
   rewardGold: number;
+  goldCost?: number;
 }
 
 export interface RewardItem {
@@ -112,7 +113,7 @@ export interface RewardItem {
   name: string;
   description: string;
   price: number;
-  category: 'Gear' | 'Themes' | 'Badges' | 'Pets';
+  category: 'Gear' | 'Themes' | 'Badges' | 'Pets' | 'Achievements';
   icon: string;
   rarity: 'Common' | 'Rare' | 'Epic' | 'Legendary';
   owned: boolean;

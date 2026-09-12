@@ -12,6 +12,8 @@ import {
   Upload,
   Link,
   X,
+  LifeBuoy,
+  ArrowRight,
 } from 'lucide-react';
 import { useGame } from '../context/GameContext';
 import { useTheme } from '../context/ThemeContext';
@@ -683,6 +685,40 @@ export const SettingsPage: React.FC = () => {
               />
             </button>
           </div>
+        </div>
+
+        {/* Technical Support & Anomaly Reporting Card */}
+        <div className={`p-6 rounded-3xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all ${
+          isDark 
+            ? 'bg-gradient-to-r from-[#141414] to-[#1E1214] border-[#F87171]/25' 
+            : 'bg-gradient-to-r from-white to-[#FAF7F2] border-[#C2A68C]'
+        }`}>
+          <div className="flex items-center gap-3.5">
+            <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 ${
+              isDark ? 'bg-[#F87171]/20 text-[#F87171]' : 'bg-[#5D866C]/20 text-[#5D866C]'
+            }`}>
+              <LifeBuoy className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold font-rpg">Technical Support & Anomaly Reporting</h3>
+              <p className={`text-xs ${isDark ? 'text-zinc-400' : 'text-[#78716C]'}`}>
+                Experiencing technical glitches, display bugs, or syncing errors? Contact our technical guild directly.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => navigate('/support')}
+            className={`w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition-all cursor-pointer shrink-0 ${
+              isDark 
+                ? 'bg-white/5 border-[#F87171]/40 text-[#F87171] hover:bg-[#F87171] hover:text-black' 
+                : 'bg-[#F5F5F0] border-[#C2A68C] text-[#5D866C] hover:bg-[#5D866C] hover:text-white'
+            }`}
+          >
+            <span>Open Support Sanctuary</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
 
         {/* Action Buttons */}

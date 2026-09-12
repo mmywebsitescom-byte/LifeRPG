@@ -10,7 +10,10 @@ import {
   Cat,
   ShieldCheck,
   Zap,
-  Check
+  Check,
+  Trophy,
+  Flame,
+  Scroll
 } from 'lucide-react';
 import { useGame } from '../context/GameContext';
 import { useTheme } from '../context/ThemeContext';
@@ -28,7 +31,7 @@ export const RewardsPage: React.FC = () => {
   } = useGame();
   const { isDark } = useTheme();
 
-  const [activeTab, setActiveTab] = useState<'All' | 'Gear' | 'Themes' | 'Badges' | 'Pets'>('All');
+  const [activeTab, setActiveTab] = useState<'All' | 'Gear' | 'Themes' | 'Badges' | 'Pets' | 'Achievements'>('All');
 
   if (loading) {
     return <ShopSkeleton />;
@@ -49,6 +52,8 @@ export const RewardsPage: React.FC = () => {
         return <Award className="w-4 h-4 text-purple-500" />;
       case 'Pets':
         return <Cat className="w-4 h-4 text-emerald-500" />;
+      case 'Achievements':
+        return <Trophy className="w-4 h-4 text-amber-500" />;
       default:
         return <Sparkles className="w-4 h-4 text-amber-500" />;
     }
@@ -66,6 +71,16 @@ export const RewardsPage: React.FC = () => {
         return <Cat className="w-10 h-10 text-emerald-500" />;
       case 'Zap':
         return <Zap className="w-10 h-10 text-amber-400" />;
+      case 'Trophy':
+        return <Trophy className="w-10 h-10 text-amber-500" />;
+      case 'Flame':
+        return <Flame className="w-10 h-10 text-orange-500" />;
+      case 'Scroll':
+        return <Scroll className="w-10 h-10 text-violet-400" />;
+      case 'Award':
+        return <Award className="w-10 h-10 text-yellow-500" />;
+      case 'Shield':
+        return <ShieldCheck className="w-10 h-10 text-blue-400" />;
       default:
         return getCategoryIcon(category);
     }
@@ -106,7 +121,7 @@ export const RewardsPage: React.FC = () => {
 
       {/* Filter Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-        {(['All', 'Gear', 'Themes', 'Badges', 'Pets'] as const).map((tab) => (
+        {(['All', 'Gear', 'Themes', 'Badges', 'Pets', 'Achievements'] as const).map((tab) => (
           <button
             key={tab}
             type="button"
@@ -132,6 +147,7 @@ export const RewardsPage: React.FC = () => {
           const canAfford = (character?.gold ?? 0) >= item.price;
           const isOwned = item.owned;
           const isEquipped = item.equipped;
+          const isAchievementItem = item.category === 'Achievements';
 
           return (
             <motion.div
@@ -140,23 +156,39 @@ export const RewardsPage: React.FC = () => {
               className={`rounded-3xl p-5 border transition-all flex flex-col justify-between overflow-hidden relative shadow-sm ${
                 isOwned
                   ? isDark
-                    ? 'bg-[#1A1214] border-[#F87171]/40'
-                    : 'bg-[#E6D8C3]/60 border-[#5D866C]/40'
+                    ? isAchievementItem
+                      ? 'bg-[#1A1400] border-amber-500/60 shadow-amber-900/30'
+                      : 'bg-[#1A1214] border-[#F87171]/40'
+                    : isAchievementItem
+                      ? 'bg-amber-50 border-amber-400/60'
+                      : 'bg-[#E6D8C3]/60 border-[#5D866C]/40'
                   : isDark
-                    ? 'bg-[#141414] border-[#F87171]/20 hover:border-[#F87171]/60'
-                    : 'bg-white border-[#C2A68C] hover:border-[#5D866C]/50 hover:shadow-md'
+                    ? isAchievementItem
+                      ? 'bg-[#141100] border-amber-500/30 hover:border-amber-400/70'
+                      : 'bg-[#141414] border-[#F87171]/20 hover:border-[#F87171]/60'
+                    : isAchievementItem
+                      ? 'bg-amber-50/60 border-amber-300 hover:border-amber-500 hover:shadow-md'
+                      : 'bg-white border-[#C2A68C] hover:border-[#5D866C]/50 hover:shadow-md'
               }`}
             >
               {/* Image Preview / Icon Showcase */}
               <div className={`relative h-44 rounded-2xl overflow-hidden mb-4 border flex items-center justify-center ${
-                isDark
-                  ? 'bg-black/40 border-[#F87171]/30'
-                  : 'bg-[#E6D8C3] border-[#C2A68C]'
+                isAchievementItem
+                  ? isDark
+                    ? 'bg-amber-950/40 border-amber-500/40'
+                    : 'bg-amber-100 border-amber-300'
+                  : isDark
+                    ? 'bg-black/40 border-[#F87171]/30'
+                    : 'bg-[#E6D8C3] border-[#C2A68C]'
               }`}>
                 <div className={`w-20 h-20 rounded-3xl flex items-center justify-center border shadow-inner ${
-                  isDark
-                    ? 'bg-[#1E1214] border-[#F87171]/30'
-                    : 'bg-white border-[#C2A68C]'
+                  isAchievementItem
+                    ? isDark
+                      ? 'bg-amber-900/50 border-amber-500/50'
+                      : 'bg-amber-200 border-amber-400'
+                    : isDark
+                      ? 'bg-[#1E1214] border-[#F87171]/30'
+                      : 'bg-white border-[#C2A68C]'
                 }`}>
                   {getItemIcon(item.icon, item.category)}
                 </div>
@@ -271,6 +303,23 @@ export const RewardsPage: React.FC = () => {
           );
         })}
       </div>
+
+      {/* Empty State */}
+      {filteredRewards.length === 0 && (
+        <div className={`text-center py-16 rounded-3xl border ${
+          isDark ? 'bg-[#141414] border-[#F87171]/20' : 'bg-white border-[#C2A68C]'
+        }`}>
+          <ShoppingBag className={`w-12 h-12 mx-auto mb-4 ${isDark ? 'text-zinc-600' : 'text-[#C2A68C]'}`} />
+          <h3 className={`text-lg font-bold font-rpg mb-2 ${isDark ? 'text-white' : 'text-[#1C1917]'}`}>
+            No Items Found
+          </h3>
+          <p className={`text-xs ${isDark ? 'text-zinc-500' : 'text-[#78716C]'}`}>
+            {activeTab === 'All'
+              ? 'Complete quests and earn gold to unlock the Mystic Bazaar inventory!'
+              : `No ${activeTab} items available yet. Try browsing All items.`}
+          </p>
+        </div>
+      )}
     </div>
   );
 };

@@ -11,6 +11,7 @@ import {
   Trophy, 
   ShoppingBag, 
   Settings,
+  LifeBuoy,
 } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -36,6 +37,7 @@ export const Sidebar: React.FC = () => {
     { to: '/achievements', label: 'Achievements', icon: Trophy },
     { to: '/rewards', label: 'Rewards Shop', icon: ShoppingBag },
     { to: '/settings', label: 'Settings', icon: Settings },
+    { to: '/support', label: 'Tech Support', icon: LifeBuoy },
   ];
 
   return (
